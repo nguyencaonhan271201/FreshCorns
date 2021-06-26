@@ -1,0 +1,122 @@
+html {
+    overflow: scroll;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+    display: none;
+}
+
+body *{
+    transition: all 0.3s ease;
+}
+
+img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 0%;
+}
+
+@font-face {
+    font-family: 'header';
+    src: url("fonts/SVN-Gilroy\ Bold.ttf");
+}
+
+@font-face {
+    font-family: 'body';
+    src: url("fonts/SVN-Gilroy\ Light.ttf");
+}
+
+h1, nav ul li {
+    font-family: header;
+}
+
+h2, h3, h4, button {
+    font-family: body;
+}
+
+h2{
+    font-size: large;
+}
+
+h3{
+    font-size: medium;
+}
+
+h1 {
+	margin-bottom: 0px;
+}
+
+.logo {
+	width: 50px;
+	padding: 5px !important;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+ul {
+	margin: 0px;
+}
+
+.button-1{
+    background-color: transparent;
+    border: 2.5px solid black;
+    border-radius: 20px;
+    padding: 3px 10px 3px 10px;
+}
+
+.button-1:hover{
+    transform: scale(1.1);
+}
+
+nav{
+    height: 10vh;
+}
+
+nav .logo{
+    padding: 10px;
+}
+
+nav .logo svg{
+    height: 85%;
+}
+
+nav ul li{
+    list-style: none;
+    display: inline-block;
+    float: right;
+    margin: 10px;
+}
+
+.banner{
+    height: 100vh;
+    width: 100vw;
+}
+
+.banner#landing{
+    position: relative;
+}
+
+.tagline_box{
+    position: absolute;
+    top: 40%;
+    left: 20%;
+}
+
+.img_box{
+    position: absolute;
+    height: 60vh;
+    width: 40vw;
+    top: 25%;
+    right: 15%;
+    background-color:seagreen;
+}
+
+u {
+    text-decoration-thickness: 3px;
+}
