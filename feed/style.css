@@ -1,0 +1,61 @@
+img{
+    width: 100%;
+    border-radius: 20px;
+}
+
+h2{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: small;
+}
+
+.postDiv textarea{
+    width: 100%;
+    background-color: transparent;
+}
+
+.postDiv input[type="file"] {
+    display: none;
+}
+
+.postForm{
+    position: relative;
+}
+
+.postForm button{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.feedCard{
+    position: relative;
+    height: fit-content;
+    min-height: 100px;
+    border: 2px solid black;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.feedCard .cardUserImg, .postUserImg{
+    position: relative;
+    width: 100px;
+    height: 100%;
+}
+
+.cardUserImg img, .postUserImg img{   
+    position: absolute; 
+    top: 0;
+    right: 0;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    padding: 10px 20px;
+}
+
+.feedCard .cardChin{
+    margin-top: 20px;
+    height: 50px;
+    background-color: gold;
+}
