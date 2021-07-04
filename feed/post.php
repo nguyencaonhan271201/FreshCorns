@@ -17,16 +17,12 @@
 
     public function __construct($conn) {
       $this->conn = $conn;
-    }
-    
+    }   
 
     public static function checkPost($POST) {
-        if (!isset($POST['postCap']) && !isset($POST['postMvId'])){
-            return false;
-        }
-        if ($_SESSION['user_id']!==$POST['postUser']){          
-            return false;
-        }
+        if (!isset($POST['postCap']) && !isset($POST['postMvId'])) return false;
+        if ($_SESSION['user_id']!==$POST['postUser']) return false;
+        if ($POST['postMode']!=1&&$POST['postMode']!=2&&$POST['postMode']!=3) return false;
         return true;
     }
 
@@ -41,10 +37,39 @@
           $this->post_movie_type = $post_movie_type;
           $this->post_content = $post_content;
           $this->post_media = $post_media;
+          $this->post_mode = $post_mode;
+          return true;
+      }
+      else return false;
+    }
+
+    public function editPost($post_movie_id,$post_movie_type,$post_content,$post_media,$post_mode){
+      $sql = "
+      UPDATE posts 
+      SET movie_id = ?,movie_type = ?,content = ?,media = ?,mode = ?
+      WHERE id = ?";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bind_param("iissii",$post_movie_id,$post_movie_type,$post_content,$post_media,$post_mode,$this->post_id);
+      $stmt->execute();
+      if($stmt->affected_rows == 1) {
+          $this->post_movie_id = $post_movie_id;
+          $this->post_movie_type = $post_movie_type;
+          $this->post_content = $post_content;
           $this->post_media = $post_media;
           $this->post_mode = $post_mode;
           return true;
       }
+      else return false;
+    }
+
+    public function deletePost(){
+      $sql = "
+      DELETE FROM posts
+      WHERE id = ?";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bind_param("i",$this->post_id);
+      $stmt->execute();
+      if($stmt->affected_rows == 1) return true;
       else return false;
     }
 
@@ -62,6 +87,26 @@
       from posts p, profiles pf
       where p.user = pf.ID and p.ID=?","i",array($this->post_id));
     }
+
+    public function likePost($user){      
+      $temp = getRows($this->conn,
+      "select *
+      from post_reactions pr
+      where pr.post = ? and pr.user = ?","ii",array($this->post_id,$user));
+      
+      if (empty($temp)){
+        if (setRow($this->conn,
+        "INSERT INTO post_reactions(post,user)VALUES (?,?)",
+        "ii",array($this->post_id,$user)) != false) return 1;
+      }
+      else{
+        if (setRow($this->conn,
+        "DELETE FROM post_reactions WHERE post = ? and user = ?",
+        "ii",array($this->post_id,$user)) != false) return 1;
+      }
+      return 0;
+    }
+
   }
 
 ?>

@@ -32,18 +32,27 @@
                             <div class="d-flex">                                           
                                 <h2>talking about</h2>                                
                                 <div class="container-fluid">
-                                    <select id="postMvVl"></select>
+                                    <select class="postMvVl"></select>
                                 </div>
                             </div>
 
-                            <textarea id="postCap"  name="caption"></textarea>
+                            <textarea class="postCap" name="caption"></textarea>                           
 
+                            <div class="postFile_preview_div">
+                                <img class="postFile_preview">
+                            </div>
                             <label>
-                                Image Upload
-                                <input id="postFile" type="file" name="create_user_img" accept="image/png, image/jpeg">
+                                <i class="bi bi-image"></i>
+                                <input class="postFile" type="file" name="create_user_img" accept="image/png, image/jpeg" onchange='previewFile(this,$(".postForm .postFile_preview"));'>
                             </label>
+                            
+                            <select class="postMode">
+                                <option value="1">Public</option>
+                                <option value="2">Followers</option>
+                                <option value="3">Private</option>
+                            </select>
 
-                            <button type="">submit</button>
+                            <button>submit</button>
                         </form>
                     </div>
                 </div>
@@ -62,5 +71,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/js/standalone/selectize.min.js" integrity="sha512-pF+DNRwavWMukUv/LyzDyDMn8U2uvqYQdJN0Zvilr6DDo/56xPDZdDoyPDYZRSL4aOKO/FGKXTpzDyQJ8je8Qw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="themoviedb.js" charset="utf-8"></script>    
     <script type="text/javascript" src="main.js" charset="utf-8"></script>
+    <script type="text/javascript" src="img_preview.js" charset="utf-8"></script>
     <script type="text/javascript" src="feed.js" charset="utf-8"></script>
 </html>

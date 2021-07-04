@@ -45,16 +45,21 @@ function loadNoReactions(){
   $(".cardReact").each(function(i,obj){
     let temp = $(this);
     $.ajax({
-      url:`ajax_react_get.php?post_id=${temp.attr('id')}`,
+      url:`ajax_react_post_get.php?post_id=${temp.attr('id')}`,
       success:function(data){
         temp.html(data);
       }
     });
     $.ajax({
-      url:`ajax_reacted_check.php?post_id=${temp.attr('id')}`,
+      url:`ajax_reacted_post_check.php?post_id=${temp.attr('id')}`,
       success:function(data){
-        if(data) temp.toggleClass("bi-heart");
-        if(data) temp.toggleClass("bi-heart-fill");
+        if(data!=0) {
+          temp.removeClass("bi-heart");
+          temp.addClass("bi-heart-fill");
+        } else {
+          temp.removeClass("bi-heart-fill");
+          temp.addClass("bi-heart");
+        }
       }
     });
   });
