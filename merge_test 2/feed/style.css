@@ -1,0 +1,88 @@
+img{
+    width: 100%;
+    border-radius: 20px;
+}
+
+h2{
+    font-size: small;
+}
+
+#postMvVl{
+    min-width: 100px;
+}
+
+.postCap{
+    width: 100%;
+    background-color: transparent;
+}
+
+.postDiv input[type="file"], .cardInfos input[type="file"]{
+    display:none;
+}
+
+.postForm{
+    position: relative;
+}
+
+.postForm button{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.feedCard{
+    position: relative;
+    height: fit-content;
+    min-height: 100px;
+    border: 2px solid black;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.limited_text{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 35ch;
+}
+
+.feedCard .cardUserImg, .postUserImg{
+    position: relative;
+    width: 100px;
+    height: 100%;
+}
+
+.cardUserImg img, .postUserImg img{   
+    position: absolute; 
+    top: 0;
+    right: 0;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    padding: 10px 20px;
+}
+
+.cardMedia, .postFile_preview_div{
+    position: relative;
+}
+
+.delMediaBtn{
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: fit-content;
+}
+
+.editMedia{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+}
+
+.feedCard .cardChin{
+    margin-top: 20px;
+    height: 50px;
+    background-color: gold;
+}
