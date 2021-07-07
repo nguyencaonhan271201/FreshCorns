@@ -28,6 +28,7 @@
   crossorigin="anonymous"></script>
 <link rel="stylesheet" href="./includes/css/chat.css">
 <link rel="stylesheet" href="./includes/css/emoji/emojionearea.min.css">
+<link rel="stylesheet" href="./feed/style.css">
 <script src="./includes/js/emoji/emojionearea.min.js"></script>
 
 <div id="main-container" class="feed-container container-fluid p-0 m-0 row" style="height: 100vh;">
@@ -54,279 +55,13 @@
     </div>
 
     <div class="mid-box mx-auto col-lg-6 col-md-8 col-sm-12 p-0 m-0">
-        <?php if($_SESSION['signed_in']):?>
-        <div class="thinking-box d-flex flex-row m-3">
-            <a href="profile.php?id=<?php echo $_SESSION['user_id'];?>">
-                <img class="rounded-circle d-inline-block profile-img" src="<?php echo $_SESSION['profile_img'];?>"> 
-            </a>
-            <input type="text" class="form-control ml-2" disabled placeholder="<?php echo $_SESSION['name']. ', what are you thinking?'?>">
-        </div>
         <div class="create-post-box d-flex flex-row m-3">
             <?php if (!isset($_GET['edit_post']) && !isset($_POST['edit_post'])) { 
                 include 'create_post.php';
             }?>
         </div>
-        <?php endif;?>
-        <div class = "posts">
-        <?php foreach ($post->posts as $post): ?>
-            <?php if($post['share_from'] == null): ?>
-                <div class='post-box m-3 p-0' id="post-<?php echo $post['ID']; ?>" data-id="<?php echo $post['ID']; ?>">
-                    <div class="d-flex justify-content-between pl-4 pr-4 pt-4 pb-1">
-                        <div class='d-flex flex-row'>
-                            <a href='profile.php?id=<?php echo $post['user'];?>' class='post-header-img'>
-                                <img class='rounded-circle d-inline-block profile-img' src='<?php echo $post['profile_image']; ?>'> 
-                            </a>
-                            <div class='post-header-info ml-2'>
-                                <div>
-                                    <a href='profile.php?id=<?php echo $post['user'];?>'><b><?php echo $post['display_name']; ?></b></a>
-                                    <p class='m-0'>
-                                        <span data-tooltip="<?php echo $post['date_created']; ?>" data-tooltip-location="top">
-                                            <?php echo getTimeString($post['date_created']); ?>
-                                        </span>
-                                        <span>·</span>
-                                        <?php if($post['mode'] == 0): ?>
-                                        <span data-tooltip="Public" data-tooltip-location="top">
-                                            <i class='fa fa-globe' aria-hidden='true'></i>
-                                        </span>
-                                        <?php elseif($post['mode'] == 1): ?>
-                                        <span data-tooltip="Follower" data-tooltip-location="top">
-                                            <i class='fas fa-user-friends' aria-hidden='true'></i>
-                                        </span>
-                                        <?php else: ?>
-                                        <span data-tooltip="Only me" data-tooltip-location="top">
-                                            <i class='fa fa-lock' aria-hidden='true'></i>
-                                        </span>
-                                        <?php endif; ?>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <?php if($post['user'] == $_SESSION['user_id']): ?>
-                        <div>
-                            <button class="post-btn btn btn-sm d-flex align-items-center dropdown-toggle" type="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="edit-drop-down">
-                                <a class="dropdown-item" href="edit_post.php?edit_post=<?php echo $post['ID']; ?>" >Edit</a>
-                                <a class="dropdown-item" href="#" >Delete</a>
-                            </div>
-                        </div>
-                        <?php endif; ?>
-                    </div>
-                    <p class='post-content mt-2 pl-4 pr-4 pb-2'>
-                        <span>
-                        <?php 
-                            $content = $post['content'];
-                            if (strlen($content) > 200) {
-                                $display_content = htmlspecialchars(substr($content, 0, 200));
-                                echo "{$display_content} ... ";
-                            } else {
-                                echo htmlspecialchars($content);
-                            }
-                        ?>
-                        </span>
-                        <?php 
-                            if (strlen($post['content']) > 200) {
-                                echo "<a href='#' data-id={$post['ID']} data-type=0 class='read-more'><b>Read more</b></a>";
-                            }
-                        ?>
-                    </p>
-                    <?php if($post['media'] != ""): ?>
-                        <a class='post-img m-0 p-0 pt-1 pb-1' href=''>
-                            <img src='<?php echo $post['media'];?>' alt=''></img>
-                        </a>
-                    <?php endif; ?>
-                    <div class='reaction-block pl-4 pr-4 pt-2 pb-2 d-flex justify-content-between'>
-                        <span>
-                            <i class='fa fa-thumbs-up' aria-hidden='true'></i>
-                            1
-                        </span>
-                        <?php if($post['number_of_comments'] > 0): ?>
-                        <a href='#' class='a-comment comment-count'>
-                            <?php echo $post['number_of_comments']; ?> comments                    
-                        </a>
-                        <?php endif; ?>
-                    </div>
-                    <hr class='ml-4 mr-4 mt-1 mb-1'>
-                    <div class='button-block pl-4 pr-4 pt-2 pb-2 d-flex justify-content-between align-items-center'>
-                        <button type='button' class='btn btn-like btn-dark text-center btn-block'>
-                            <i class='fa fa-thumbs-up' aria-hidden='true'></i> 
-                            <span> Like</span>
-                        </button>
-                        <button type='button' class='btn btn-comment btn-dark text-center btn-block'>
-                            <i class='fa fa-comment' aria-hidden='true'></i> 
-                            <span> Comment</span>
-                        </button>
-                        <button type='button' class='btn btn-share btn-dark text-center btn-block'>
-                            <i class='fa fa-share' aria-hidden='true'></i> 
-                            <span> Share</span>
-                        </button>
-                    </div>
-
-                    <p class='d-none full-content'><?php echo $post['content']; ?></p>
-
-                    <div class="comment-section d-none">
-                        <hr class="ml-4 mr-4 mt-1 mb-1">
-                        <div class="pl-4 pr-4 pt-2 pb-2">              
-                            <div class='comment-input d-flex flex-row mt-2' data-id="<?php echo $post['ID']; ?>">
-                                <a class='comment-header-img'>
-                                    <img class='rounded-circle d-inline-block profile-img' src='<?php echo $_SESSION['profile_img']; ?>'> 
-                                </a>
-                                <div class="comment-input-div ml-2">
-                                    <input data-emoji-input='unicode' data-emojiable='true'
-                                    type="text" class="form-control comment_inp" name="comment" placeholder="Write comment...">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php else: ?>
-                <div class='post-box m-3 p-0' id="post-<?php echo $post['ID']; ?>" data-id="<?php echo $post['ID']; ?>">
-                    <div class="d-flex justify-content-between pl-4 pr-4 pt-4 pb-1">
-                        <div class='d-flex flex-row'>
-                            <a href='profile.php?id=<?php echo $post['user'];?>' class='post-header-img'>
-                                <img class='rounded-circle d-inline-block profile-img' src='<?php echo $post['profile_image']; ?>'> 
-                            </a>
-                            <div class='post-header-info ml-2'>
-                                <div>
-                                    <a href='profile.php?id=<?php echo $post['user'];?>'><b><?php echo $post['display_name']; ?></b></a>
-                                    <p class='m-0'>
-                                        <span data-tooltip="<?php echo $post['date_created']; ?>" data-tooltip-location="top">
-                                            <?php echo getTimeString($post['date_created']); ?>
-                                        </span>
-                                        <span>·</span>
-                                        <?php if($post['mode'] == 0): ?>
-                                        <span data-tooltip="Public" data-tooltip-location="top">
-                                            <i class='fa fa-globe' aria-hidden='true'></i>
-                                        </span>
-                                        <?php elseif($post['mode'] == 1): ?>
-                                        <span data-tooltip="Follower" data-tooltip-location="top">
-                                            <i class='fas fa-user-friends' aria-hidden='true'></i>
-                                        </span>
-                                        <?php else: ?>
-                                        <span data-tooltip="Only me" data-tooltip-location="top">
-                                            <i class='fa fa-lock' aria-hidden='true'></i>
-                                        </span>
-                                        <?php endif; ?>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <?php if($post['user'] == $_SESSION['user_id']): ?>
-                        <div>
-                            <button class="post-btn btn btn-sm d-flex align-items-center dropdown-toggle" type="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="edit-drop-down">
-                                <a class="dropdown-item" href="#" >Delete</a>
-                            </div>
-                        </div>
-                        <?php endif; ?>
-                    </div>
-                    <div class="share-content">
-                        <div class='post-box m-3 mt-1 p-0' data-id="<?php echo $post['original']['ID']; ?>">
-                            <div class="d-flex justify-content-between pl-3 pr-3 pt-3 pb-1">
-                                <div class='d-flex flex-row'>
-                                    <a href='profile.php?id=<?php echo $post['original']['user'];?>' class='post-header-img'>
-                                        <img class='rounded-circle d-inline-block profile-img' src='<?php echo $post['original']['profile_image']; ?>'> 
-                                    </a>
-                                    <div class='post-header-info ml-2'>
-                                        <div>
-                                            <a href='profile.php?id=<?php echo $post['original']['user'];?>'><b><?php echo $post['original']['display_name']; ?></b></a>
-                                            <p class='m-0'>
-                                                <span data-tooltip="<?php echo $post['original']['date_created']; ?>" data-tooltip-location="top">
-                                                    <?php echo getTimeString($post['original']['date_created']); ?>
-                                                </span>
-                                                <span>·</span>
-                                                <?php if($post['original']['mode'] == 0): ?>
-                                                <span data-tooltip="Public" data-tooltip-location="top">
-                                                    <i class='fa fa-globe' aria-hidden='true'></i>
-                                                </span>
-                                                <?php elseif($post['original']['mode'] == 1): ?>
-                                                <span data-tooltip="Follower" data-tooltip-location="top">
-                                                    <i class='fas fa-user-friends' aria-hidden='true'></i>
-                                                </span>
-                                                <?php else: ?>
-                                                <span data-tooltip="Only me" data-tooltip-location="top">
-                                                    <i class='fa fa-lock' aria-hidden='true'></i>
-                                                </span>
-                                                <?php endif; ?>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class='post-content mt-2 pl-4 pr-4 pb-2'>
-                                <span>
-                                <?php 
-                                    $content = $post['original']['content'];
-                                    if (strlen($content) > 200) {
-                                        $display_content = htmlspecialchars(substr($content, 0, 200));
-                                        echo "{$display_content} ... ";
-                                    } else {
-                                        echo htmlspecialchars($content);
-                                    }
-                                ?>
-                                </span>
-                                <?php 
-                                    if (strlen($post['original']['content']) > 200) {
-                                        echo "<a href='#' data-id={$post['original']['ID']} data-type=0 class='read-more'><b>Read more</b></a>";
-                                    }
-                                ?>
-                            </p>
-                            <?php if($post['original']['media'] != ""): ?>
-                                <a class='post-img m-0 p-0 pt-1 pb-1' href=''>
-                                    <img src='<?php echo $post['original']['media'];?>' alt=''></img>
-                                </a>
-                            <?php endif; ?>        
-                            <p class='d-none full-content'><?php echo $post['original']['content']; ?></p>
-                        </div>
-                    </div>
-                    <div class='reaction-block pl-4 pr-4 pt-2 pb-2 d-flex justify-content-between'>
-                        <span>
-                            <i class='fa fa-thumbs-up' aria-hidden='true'></i>
-                            1
-                        </span>
-                        <?php if($post['number_of_comments'] > 0): ?>
-                        <a href='#' class='a-comment comment-count'>
-                            <?php echo $post['number_of_comments']; ?> comments                    
-                        </a>
-                        <?php endif; ?>
-                    </div>
-                    <hr class='ml-4 mr-4 mt-1 mb-1'>
-                    <div class='button-block pl-4 pr-4 pt-2 pb-2 d-flex justify-content-between align-items-center'>
-                        <button type='button' class='btn btn-like btn-dark text-center btn-block'>
-                            <i class='fa fa-thumbs-up' aria-hidden='true'></i> 
-                            <span> Like</span>
-                        </button>
-                        <button type='button' class='btn btn-comment btn-dark text-center btn-block'>
-                            <i class='fa fa-comment' aria-hidden='true'></i> 
-                            <span> Comment</span>
-                        </button>
-                    </div>
-
-                    <p class='d-none full-content'><?php echo $post['content']; ?></p>
-
-                    <div class="comment-section d-none">
-                        <hr class="ml-4 mr-4 mt-1 mb-1">
-                        <div class="pl-4 pr-4 pt-2 pb-2">              
-                            <div class='comment-input d-flex flex-row mt-2' data-id="<?php echo $post['ID']; ?>">
-                                <a class='comment-header-img'>
-                                    <img class='rounded-circle d-inline-block profile-img' src='<?php echo $_SESSION['profile_img']; ?>'> 
-                                </a>
-                                <div class="comment-input-div ml-2">
-                                    <input data-emoji-input='unicode' data-emojiable='true'
-                                    type="text" class="form-control comment_inp" name="comment" placeholder="Write comment...">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            <?php endif; ?>
-        <?php endforeach; ?>
+        <div class = "posts pl-3 pr-3">
+            <div id="mainFeed"></div>
         </div>
     </div>
 
@@ -489,9 +224,14 @@
     <img src="" alt="">
 </div>
 
-<script type="text/javascript" src="includes/js/themoviedb.js" charset="utf-8"></script>    
 <script src="includes/js/post.js"></script>
+<script type="text/javascript" src="feed/main.js" charset="utf-8"></script>
+<script type="text/javascript" src="feed/img_preview.js" charset="utf-8"></script>
+<script type="text/javascript" src="feed/feed.js" charset="utf-8"></script>
+<script type="text/javascript" src="includes/js/themoviedb.js" charset="utf-8"></script>    
 <script src="includes/js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
 
 <script>
     $(document).ready(function() {
@@ -506,6 +246,13 @@
                     }
                 }
             });   
+    })
+
+    $(document).ready(function() {
+        $('#post_content').emojioneArea({
+            pickerPosition: "bottom",
+            search: false,
+        });   
     })
 </script>
 </body>
