@@ -54,11 +54,11 @@ function loadNoReactions(){
       url:`feed/ajax_reacted_post_check.php?post_id=${temp.attr('id')}`,
       success:function(data){
         if(data!=0) {
-          temp.removeClass("bi-heart");
-          temp.addClass("bi-heart-fill");
+          temp.removeClass("far");
+          temp.addClass("fas");
         } else {
-          temp.removeClass("bi-heart-fill");
-          temp.addClass("bi-heart");
+          temp.removeClass("fas");
+          temp.addClass("far");
         }
       }
     });

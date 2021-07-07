@@ -26,14 +26,13 @@
         return true;
     }
 
-    function saveFile($file,$dir) {
+    function saveFile($file,$dir,$base=null) {
         $ftype = explode("/",$file['type']);
         $new_filename = uniqid('', false) . "." . end($ftype);
         
         $new_dest = $dir . $new_filename;
-
-        if(move_uploaded_file($file['tmp_name'], $new_dest)) {
-            return 'assets/images/posts/' . $new_dest;
+        if(move_uploaded_file($file['tmp_name'], $base.$new_dest)) {
+            return $new_dest;
           } else {
             return null;
           }

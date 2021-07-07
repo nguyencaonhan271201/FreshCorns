@@ -73,11 +73,42 @@
       else return false;
     }
 
-    public static function getAllPostsPublic($conn){
+    public static function getAllPostsPublic($conn, $user_id){
       $posts = getRows($conn,
-        "select p.*,pf.display_name,pf.profile_image
+        "select p.*, pf.display_name,pf.profile_image
         from posts p, profiles pf
-        where p.user = pf.ID","",array());
+        where p.user = pf.ID and p.mode = 1 AND p.share_from IS NULL
+        OR EXISTS (SELECT * FROM relationships r WHERE r.user2 = (SELECT user FROM posts WHERE ID = p.share_from) AND r.user1 = ?)
+        ORDER BY p.date_created ASC","i",
+        array($user_id));
+
+        for ($i = 0; $i < count($posts); $i++) {
+          if ($posts[$i]['share_from'] != null) {
+              $query = "SELECT p.ID, p.user, p.content, p.movie_id, p.movie_type, p.media, p.mode, p.share_from, p.date_created, u.display_name, u.profile_image
+              FROM posts p, profiles u WHERE p.user = u.ID AND p.ID = ? AND p.mode=1";
+              $stmt = $conn->prepare($query);
+              $stmt->bind_param("i", $posts[$i]['share_from']);
+              $stmt->execute();
+              $posts[$i]['original'] = $stmt->get_result()->fetch_assoc();
+          }
+      }
+
+      return $posts;
+    }
+
+    public static function getAllPostsFollowing($conn,$user_id){
+      $posts = getRows($conn,
+        "SELECT DISTINCT p.*, pf.display_name, pf.profile_image
+        FROM posts p JOIN profiles pf
+        ON p.user = pf.ID WHERE p.ID IN (SELECT ID FROM posts WHERE user = ? AND (mode = 2 OR mode = 3))
+        OR p.ID IN
+        (SELECT p1.ID
+        FROM posts p1, relationships r
+        WHERE p1.user = r.user2 AND r.user1 = ?
+        AND (p1.share_from IS NULL
+        OR EXISTS (SELECT * FROM relationships r1 WHERE r1.user2 = (SELECT user FROM posts WHERE ID = p1.share_from) AND r1.user1 = ?))
+        AND (p1.mode = 2 OR p1.mode = 3))
+        ORDER BY p.date_created ASC","iii",array($user_id,$user_id,$user_id));
 
         for ($i = 0; $i < count($posts); $i++) {
           if ($posts[$i]['share_from'] != null) {

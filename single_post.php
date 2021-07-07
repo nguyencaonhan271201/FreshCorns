@@ -54,7 +54,7 @@
                             <div>
                                 <h2>
                                 <a href=""><?php echo htmlspecialchars($post->post['display_name'])?></a> 
-                                is talking about 
+                                talking about 
                                 <a class="movie_title" id='
                                 <?php echo json_encode(array('movie_id'=>$post->post['movie_id'],'movie_type'=>$post->post['movie_type']))?>' href=""></a> 
                                 • <?php echo htmlspecialchars(getTimeString($post->post['date_created']))?>
@@ -72,17 +72,20 @@
                         <div class="row">
                             <div class="col text-center">
                                 <div clas="d-flex">       
-                                    <i class="cardReact bi bi-heart" id="<?php echo htmlspecialchars($post->post['ID'])?>">100</i>
+                                    <i class="cardReact far fa-thumbs-up" id="<?php echo htmlspecialchars($post->post['ID'])?>">100</i>
                                 </div>
                             </div>
-                            <div class="col text-center">           
-                                comment
+                            <div class="col text-center">       
+                                <i class="cardComment bi bi-chat-text"></i>
                             </div>
                             <?php if($post->post['user'] == $_SESSION['user_id']):?>                            
                             <div class="col text-center">
                                 <i class="cardEdit bi bi-pencil" id="<?php echo htmlspecialchars($post->post['ID'])?>"></i>
                             </div>
-                            <?php endif?>
+                            <?php endif?>                            
+                            <div class="col text-center">      
+                                <i class="singleCardShare fa fa-share" aria-hidden="true" id="<?php echo htmlspecialchars($post->post['ID'])?>"></i>
+                            </div>
                         </div>
                     </div>
 
@@ -150,11 +153,11 @@
                         <div class="row">
                             <div class="col text-center">
                                 <div clas="d-flex">       
-                                    <i class="cardReact bi bi-heart" id="<?php echo htmlspecialchars($post->post['ID'])?>">100</i>
+                                    <i class="cardReact far fa-thumbs-up" id="<?php echo htmlspecialchars($post->post['ID'])?>">100</i>
                                 </div>
                             </div>
-                            <div class="col text-center">           
-                                comment
+                            <div class="col text-center">  
+                                <i class="cardComment bi bi-chat-text"></i>
                             </div>
                             <?php if($post->post['user'] == $_SESSION['user_id']):?>                            
                             <div class="col text-center">
@@ -201,6 +204,68 @@
     </div>
 </div>
 
+<div class="modal fade" id="singlePostErrorBox" tabindex="-1" role="dialog" aria-labelledby="errorBox" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Error</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Error occured! Please try again later!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="singlePostShareConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Share this post?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <select class="form-control" id="single-post-share-type">
+                    <option value="1">Public</option>
+                    <option value="2">Followers</option>
+                    <option value="3">Private</option>        
+                </select>
+            </div>
+            <p class="d-none" id="singlePostSharePostID"></p>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <a role="button" class="btn btn-danger share-confirm" href="">Yes</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="commentDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                Are you sure want to delete this comment?
+            </div>
+            <p class="d-none" id="deleteCommentID"></p>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <a role="button" class="btn btn-danger comment-delete-confirm" href="">Yes</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>

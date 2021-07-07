@@ -1,21 +1,12 @@
+let selectizeControl;
+
 $(document).ready(function(){
-    loadPosts_Public();
-    selectizeSelect($('.postMvVl'));
+  loadPosts('feed/ajax_post_get_public.php',$('#public'));
+  loadPosts('feed/ajax_post_get_following.php',$('#following'));
+  selectizeControl = selectizeSelect($('.postMvVl'));
 });
 
 function selectizeSelect(object,defaultOption = null){
-  
-  /*if (defaultOption){
-    console.log(object);
-    console.log(defaultOption);
-    let temp = object.selectize({      
-      valueField: "value",
-      labelField: "title",
-      searchField: "title",
-    });
-    temp[0].selectize.addOption(defaultOption);
-    temp[0].selectize.addItem(1,false);
-  }*/
   
   let temp = object.selectize({
       valueField: "value",
@@ -62,6 +53,7 @@ function selectizeSelect(object,defaultOption = null){
     temp[0].selectize.addItem(defaultOption['value'],false);
   };
 
+  return temp[0].selectize;
 }
 
 function cleanResult(results){
@@ -100,45 +92,58 @@ $('.postFile_preview').on('load',function(){
 
 $("form").submit(e => {
   e.preventDefault();
-  let postData = new FormData();
-  postData.append('postUser',my_id);
-  postData.append('postCap',this.$('.postCap').val());
-  postData.append('postMvId',JSON.parse(this.$('.postMvVl').val())['movie_id']);
-  postData.append('postMvType',JSON.parse(this.$('.postMvVl').val())['movie_type']==true?1:0);
-  postData.append('postFile',this.$('.postFile')[0].files[0]);
-  postData.append('postMode',this.$('.postMode').val());
+  let parent = $(this);
 
-  console.log(postData.get('postFile')); 
-  
-  $.ajax({
-    url: 'feed/ajax_post_add.php',
-    type:'POST',
-    data: postData,
-    processData: false,
-    contentType: false,
-    success: function(data){
-      //$('#php_return').html(data);
-      console.log(data);
-      loadPosts_Public();
-    }
-  });
-
+  if (this.$('.postMvVl').val()=='') this.$('.selectize-input').effect("shake");
+  //if cap trống
+  else {
+    let postData = new FormData();
+    postData.append('postUser',my_id);
+    postData.append('postCap',this.$('.postCap').val());
+    postData.append('postMvId',JSON.parse(this.$('.postMvVl').val())['movie_id']);
+    postData.append('postMvType',JSON.parse(this.$('.postMvVl').val())['movie_type']==true?1:0);
+    postData.append('postFile',this.$('.postFile')[0].files[0]);
+    postData.append('postMode',this.$('.postMode').val());
+    
+    $.ajax({
+      url: 'feed/ajax_post_add.php',
+      type:'POST',
+      data: postData,
+      processData: false,
+      contentType: false,
+      success: function(data){
+        //$('#php_return').html(data);
+        if (data) {
+          if (this.$('.postMode').val()==1) loadPosts('feed/ajax_post_get_public.php',$('#public'));
+          else loadPosts('feed/ajax_post_get_following.php',$('#following'));
+          parent.trigger('reset');
+          selectizeControl.clearOptions();
+          parent.find('.emojionearea-editor').val('');
+        }
+      }
+    });
+  }
 });
 
+$('#myTab a').on('click', function (event) {
+  event.preventDefault()
+  $(this).tab('show')
+})
 
-function loadPosts_Public(){
-    $.ajax({
-      url: 'feed/ajax_post_get_public.php',
-      success: function(data){
-        console.log(data)
-        let results = JSON.parse(data);
-        printPosts_Public(results);
-      }
-    })
-  }
+function loadPosts(ajax_url,div){
+  $.ajax({
+    url: ajax_url,
+    success: function(data){
+      //console.log(data)
+      //$('#php_return').html(data);
+      let results = JSON.parse(data);
+      printPosts(div,results);
+    }
+  })
+}
 
-function printPosts_Public(results){
-    $("#mainFeed").empty();
+function printPosts(div,results){
+    div.empty();
     results.forEach(result=>{
       //console.log(result);
       let mode_text = '';
@@ -157,7 +162,7 @@ function printPosts_Public(results){
               <div class="cardInfos container-fluid p-0" id="${result['ID']}">
                   <h2>
                     <a href="">${result['display_name']}</a> 
-                    is talking about 
+                    talking about 
                     <a class="movie_title" id='${
                       JSON.stringify({
                         movie_id:result['movie_id'],
@@ -179,11 +184,11 @@ function printPosts_Public(results){
               <div class="row">
                 <div class="col text-center">
                   <div clas="d-flex">       
-                    <i class="cardReact bi bi-heart" id="${result['ID']}"> 100</i>
+                    <i class="cardReact far fa-thumbs-up" id="${result['ID']}"> 100</i>
                   </div>
                 </div>
-                <div class="col text-center">              
-                  comment
+                <div class="col text-center">
+                  <i class="cardComment bi bi-chat-text"></i>
                 </div>
             `;
             if (my_id == result['user']) html+=`
@@ -191,12 +196,21 @@ function printPosts_Public(results){
                   <i class="cardEdit bi bi-pencil" id="${result['ID']}"></i>
                 </div>
             `;
-            html+=`
+            html+=`            
+                <div class="col text-center">              
+                  <i class="cardShare fa fa-share" aria-hidden="true" id="${result['ID']}"></i>
+                </div>
               </div>
             </div>
           </div>
         `;
-        } else {
+        } 
+        else 
+        {
+          let share_mode_text = '';
+          if (result['original']['mode']==1)  share_mode_text='<i class="bi bi-globe"></i>';
+          else if (result['original']['mode']==2)  share_mode_text='<i class="bi bi-people"></i>';
+          else if (result['original']['mode']==3)  share_mode_text='<i class="bi bi-person"></i>';
           html = `
           <div class="feedCard container-fluid p-0" id="${result['ID']}">
             <div class="d-flex pr-3">
@@ -215,20 +229,20 @@ function printPosts_Public(results){
                     <div class="feedCard container-fluid p-0">
                       <div class="d-flex pr-3">
                         <div class="cardUserImg">
-                            <img src="${result['profile_image']}">
+                            <img src="${result['original']['profile_image']}">
                         </div>
 
                         <div class="cardInfos container-fluid p-0">
                             <h2>
                               <a href="">${result['original']['display_name']}</a> 
-                              is talking about 
+                              talking about 
                               <a class="movie_title" id='${
                               JSON.stringify({
                                 movie_id:result['original']['movie_id'],
                                 movie_type:result['original']['movie_type']
                               })}' href=""></a> 
                               • <a class="cardDate" href="single_post.php?id=${result['original']['ID']}">${getDuration(new Date(result['original']['date_created']))}</a>
-                              • <span class="cardMode" id="${result['original']['mode']}">${mode_text}</span>
+                              • <span class="cardMode" id="${result['original']['mode']}">${share_mode_text}</span>
                             </h2>
 
                             <p class="limited_text">${result['original']['content']}</p>   
@@ -247,7 +261,7 @@ function printPosts_Public(results){
               <div class="row">
                 <div class="col text-center">
                   <div clas="d-flex">       
-                    <i class="cardReact bi bi-heart" id="${result['ID']}"> 100</i>
+                    <i class="cardReact far fa-thumbs-up" id="${result['ID']}"> 100</i>
                   </div>
                 </div>
                 <div class="col text-center">              
@@ -261,18 +275,21 @@ function printPosts_Public(results){
         `;
         }
 
-        
-        $("#mainFeed").prepend(html);
+        div.prepend(html);
     });  
     
     loadMovieTitles();
     loadNoReactions();  
-    $(".cardReact").click(function(){
+    $(".cardReact").unbind().click(function(){
       ReactPost($(this));
     });
-    $(".cardEdit").click(function(){
+    $(".cardEdit").unbind().click(function(){
       EditPost($(this));
     });  
+    $(".cardShare").unbind().click(function(){
+      document.querySelector("#shareConfirmationModal").querySelector("#sharePostID").innerHTML = $(this).attr('id'); 
+      $("#shareConfirmationModal").modal("show");
+    });
 
     document.querySelectorAll(".feedCard").forEach(box => {
       box.addEventListener("click", function(e) {
@@ -286,27 +303,6 @@ function printPosts_Public(results){
             let getURL = target.src;
             loadImage(getURL);
             showImageBox();
-          } else if (target.classList.contains("comment-reply")) {
-              e.preventDefault();
-              let inputBlock = target.parentNode.parentNode.children[2];
-              if (inputBlock.classList.contains("d-none")) {
-                  inputBlock.classList.remove("d-none");
-                  inputBlock.classList.add("d-flex");
-                  inputBlock.classList.add("flex-row");
-              } else {
-                  inputBlock.classList.remove("d-flex");
-                  inputBlock.classList.remove("flex-row");
-                  inputBlock.classList.add("d-none");
-              }
-              let getName = target.parentNode.parentNode.parentNode.querySelector(".comment-row").querySelector(".comment-box").querySelector("div a b");
-              let getID = getName.parentNode.getAttribute("data-user-id");
-              let getEditor = inputBlock.querySelector(".emojionearea-editor");
-              if (getEditor != "" && getID != my_id) {
-                  inputBlock.querySelector(".emojionearea-editor").innerHTML = `
-                      <a href="profile.php?id=${getID}" class="mention-a">${getName.innerText}</a>
-                  `;
-              }
-  
           } else {
             if (target.classList.contains("comment-like")) {
               e.preventDefault();
@@ -428,40 +424,48 @@ function EditPost(object){
       url: `feed/ajax_post_delete.php?postId=${id}`,
       success: function(data){
         //$('#php_return').html(data);
-        loadPosts_Public();
+        loadPosts('feed/ajax_post_get_public.php',$('#public'));
       }
     });
   });
+  $('.postCap').emojioneArea({
+    inline: false,
+  }); 
   parent.find('.editSubmit').click(function(){
-    let postData = new FormData();
-    postData.append('postUser',my_id);
-    postData.append('postId',id);
 
-    postData.append('postCap',parent.find('.postCap').val());
+    if (parent.find('.postMvVl').val()=='') parent.find('.selectize-input').effect("shake");
+    //if cap trống
+    else {
+      let postData = new FormData();
+      postData.append('postUser',my_id);
+      postData.append('postId',id);
 
-    postData.append('postMvId',JSON.parse(parent.find('.postMvVl').val())['movie_id']);
-    postData.append('postMvType',JSON.parse(parent.find('.postMvVl').val())['movie_type']==true?1:0);
+      postData.append('postCap',parent.find('.postCap').val());
 
-    if (parent.find('.postFile').val()) postData.append('postFile',parent.find('.postFile')[0].files[0]);
-    else if (mediaCard.find('img').attr('src')) postData.append('postFile',mediaCard.find('img').attr('src'));
-    else postData.append('postFile','undefined');
+      postData.append('postMvId',JSON.parse(parent.find('.postMvVl').val())['movie_id']);
+      postData.append('postMvType',JSON.parse(parent.find('.postMvVl').val())['movie_type']==true?1:0);
 
-    postData.append('postMode',parent.find('.postMode').val());
+      if (parent.find('.postFile').val()) postData.append('postFile',parent.find('.postFile')[0].files[0]);
+      else if (mediaCard.find('img').attr('src')) postData.append('postFile',mediaCard.find('img').attr('src'));
+      else postData.append('postFile','undefined');
 
-    $.ajax({
-      url: 'feed/ajax_post_edit.php',
-      type:'POST',
-      data: postData,
-      processData: false,
-      contentType: false,
-      success: function(data){
-        //$('#php_return').html(data);
-        //loadPosts_Public();
-        window.location.reload();
-      }
-    });
+      postData.append('postMode',parent.find('.postMode').val());
 
+      $.ajax({
+        url: 'feed/ajax_post_edit.php',
+        type:'POST',
+        data: postData,
+        processData: false,
+        contentType: false,
+        success: function(data){
+          //$('#php_return').html(data);
+          window.location.reload();
+        }
+      });
+    };
   });
+
+  
 }
 
 function showImageBox() {

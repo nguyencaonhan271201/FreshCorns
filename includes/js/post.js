@@ -120,23 +120,12 @@ document.querySelector(".image-box").addEventListener("click", function() {
     hideImageBox();
 })
 
-document.querySelector("#commentDeleteModal").addEventListener("click", function(e) {
-    if (e.target.classList.contains("comment-delete-confirm")) {
-        e.preventDefault();
-        performCommentDeletion(e.target.parentNode.parentNode.querySelector("#deleteCommentID").innerHTML);
-    }
-})
-
 document.querySelector("#shareConfirmationModal").addEventListener("click", function(e) {
     if (e.target.classList.contains("share-confirm")) {
         e.preventDefault();
         sharePost(e.target.parentNode.parentNode.querySelector("#sharePostID").innerHTML, e.target.parentNode.parentNode.querySelector("#share-type").value);
     }
 })
-
-
-
-
 
 function sharePost(postID, mode) {
     let xhr = new XMLHttpRequest();

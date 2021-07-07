@@ -61,6 +61,21 @@
             }?>
         </div>
         <div class = "posts pl-3 pr-3">
+
+            <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="public-tab" data-toggle="tab" href="#public" role="tab" aria-controls="public" aria-selected="true">Public</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="following-tab" data-toggle="tab" href="#following" role="tab" aria-controls="following" aria-selected="false">Following</a>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="public" role="tabpanel" aria-labelledby="public-tab">Public</div>
+                <div class="tab-pane fade" id="following" role="tabpanel" aria-labelledby="following-tab">Following</div>
+            </div>
+
             <div id="mainFeed"></div>
         </div>
     </div>
@@ -206,9 +221,9 @@
             </div>
             <div class="modal-body text-left">
                 <select class="form-control" id="share-type">
-                    <option value="0">Public</option>
-                    <option value="1">Follower</option>
-                    <option value="2">Only me</option>        
+                    <option value="1">Public</option>
+                    <option value="2">Followers</option>
+                    <option value="3">Private</option>        
                 </select>
             </div>
             <p class="d-none" id="sharePostID"></p>

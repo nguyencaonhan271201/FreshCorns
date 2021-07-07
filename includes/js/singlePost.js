@@ -280,9 +280,24 @@ function outputComments(result) {
             `;
             parent.appendChild(commentDiv);
         }
+
+        setTimeout(() => {
+            $(`#comment-${commentID} .reply_inp`).emojioneArea({
+                search: false,
+                inline: true,
+                events: {
+                        keyup: function (editor, event) {
+                            if (event.which == 13) {
+                                let getID = event.target.parentNode.parentNode.getAttribute("data-id");
+                                handleCommentSubmit(1, event.target);
+                            }
+                        }
+                    }
+                }); 
+        }, 100)
     })
 
-    checkEmojiInput();
+    //checkEmojiInput();
     document.querySelectorAll(".comment").forEach((commentDiv) => {
         let numberOfReplies = commentDiv.querySelectorAll(".replies-list .comment").length;
         if (numberOfReplies > 0) {
@@ -323,6 +338,26 @@ function outputComments(result) {
                 e.preventDefault();
                 target.parentNode.parentNode.querySelector(".replies-list").classList.remove("d-none");
                 target.parentNode.classList.add("d-none");
+            } else if (target.classList.contains("comment-reply")) {
+                e.preventDefault();
+                let inputBlock = target.parentNode.parentNode.children[2];
+                if (inputBlock.classList.contains("d-none")) {
+                    inputBlock.classList.remove("d-none");
+                    inputBlock.classList.add("d-flex");
+                    inputBlock.classList.add("flex-row");
+                } else {
+                    inputBlock.classList.remove("d-flex");
+                    inputBlock.classList.remove("flex-row");
+                    inputBlock.classList.add("d-none");
+                }
+                let getName = target.parentNode.parentNode.parentNode.querySelector(".comment-row").querySelector(".comment-box").querySelector("div a b");
+                let getID = getName.parentNode.getAttribute("data-user-id");
+                let getEditor = inputBlock.querySelector(".emojionearea-editor");
+                if (getEditor != "" && getID != my_id) {
+                    inputBlock.querySelector(".emojionearea-editor").innerHTML = `
+                        <a href="profile.php?id=${getID}" class="mention-a">${getName.innerText}</a>
+                    `;
+                }
             }
         })
     }); 
@@ -376,7 +411,7 @@ function editCommentExecute(commentID) {
     commentBox.classList.add("comment-box-edit")
     commentBox.innerHTML = `
         <textarea data-emoji-input='unicode' data-emojiable='true'
-        type="text" class="form-control" name="comment_edit_content" id="comment_edit_content" data-id="commentID"
+        type="text" class="form-control" name="comment_edit_content" id="comment_edit_content_${commentID}" data-id="commentID"
         placeholder="Write...">${commentOriginalContent.trim()}</textarea>
         <p>Press Esc to <a class="blue-a" href="">cancel</a>.</p>
     `;
@@ -393,7 +428,7 @@ function editCommentExecute(commentID) {
         getMentionHTMLEdit = getMentionHTML.replace("mention-a-display", "mention-a");
         commentBox.innerHTML = `
         <textarea data-emoji-input='unicode' data-emojiable='true'
-        type="text" class="form-control" name="comment_edit_content" id="comment_edit_content" data-id="commentID"
+        type="text" class="form-control" name="comment_edit_content" id="comment_edit_content_${commentID}" data-id="commentID"
         placeholder="Write...">${commentOriginalContent.trim().replace(getMentionHTML, getMentionHTMLEdit)}</textarea>
         <p>Press Esc to <a class="blue-a" href="">cancel</a>.</p>
         `;
@@ -407,7 +442,7 @@ function editCommentExecute(commentID) {
     let commentHelperBlock = getCommentWrapper.querySelector(".comment-helper-btns");
     commentHelperBlock.classList.add("d-none");
 
-    $('#comment_edit_content').emojioneArea({
+    $(`#comment_edit_content_${commentID}`).emojioneArea({
         pickerPosition: "bottom",
         search: false,
         events: {
@@ -483,8 +518,11 @@ function editCommentExecute(commentID) {
     });
 
     //Change format for mentioning
-    document.querySelector(".emojionearea-editor").innerHTML = 
-    document.querySelector(".emojionearea-editor").innerHTML.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+    document.querySelectorAll(".comment .emojionearea-editor").forEach(comment => {
+        comment.innerHTML = comment.innerHTML.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+    })
+    // document.querySelector(".comment .emojionearea-editor").innerHTML = 
+    // document.querySelector(".emojionearea-editor").innerHTML.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
 
     commentBox.querySelector(".blue-a").addEventListener("click", function(e) {
         e.preventDefault();
@@ -495,6 +533,13 @@ function editCommentExecute(commentID) {
         commentHelperBlock.classList.remove("d-none");
     });
 }
+
+document.querySelector("#commentDeleteModal").addEventListener("click", function(e) {
+    if (e.target.classList.contains("comment-delete-confirm")) {
+        e.preventDefault();
+        performCommentDeletion(e.target.parentNode.parentNode.querySelector("#deleteCommentID").innerHTML);
+    }
+})
 
 function performCommentDeletion(commentID) {
     let xhr = new XMLHttpRequest();
@@ -519,7 +564,6 @@ function handleCommentSubmit(type, element) {
     let getInnerHTML = element.innerHTML.trim();
     let getMentionHTML = "";
     let getMentionName = "";
-    console.log(getInnerHTML);
     if (getInnerHTML.indexOf(`<a href="profile.php?id=`) != -1) {
         getMentionHTML = getInnerHTML.substring(0, getInnerHTML.indexOf(`</a>`) + 4);
         getMentionName = getMentionHTML.substring(getMentionHTML.indexOf(`>`) + 1, getInnerHTML.indexOf(`</a>`));
@@ -799,4 +843,34 @@ function checkEmojiInput() {
                 }
             }
         }); 
+}
+
+$(".singleCardShare").unbind().click(function(){
+    document.querySelector("#singlePostShareConfirmationModal").querySelector("#singlePostSharePostID").innerHTML = $(this).attr('id'); 
+    $("#singlePostShareConfirmationModal").modal("show");
+});
+
+document.querySelector("#singlePostShareConfirmationModal").addEventListener("click", function(e) {
+    if (e.target.classList.contains("share-confirm")) {
+        e.preventDefault();
+        sharePost(e.target.parentNode.parentNode.querySelector("#singlePostSharePostID").innerHTML, e.target.parentNode.parentNode.querySelector("#single-post-share-type").value);
+    }
+})
+
+function sharePost(postID, mode) {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "././includes/php/mainRequestHandler.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function() {
+        if(this.status == 200 && this.readyState == 4) {
+            let message = this.responseText;
+            if (message != "true") {
+                $("#singlePostErrorBox").modal("show");
+            } else {
+                window.location.href = 'feeds.php';
+            }
+        }
+    }
+    xhr.send(`post_share&postID=${postID}&mode=${mode}`);
+    $("#singlePostShareConfirmationModal").modal("hide");
 }

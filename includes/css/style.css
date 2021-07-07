@@ -657,3 +657,16 @@ nav .logo svg{
     cursor: pointer;
     color: white !important;
 }
+
+.emojionearea.postCap .emojionearea-button {
+    bottom: 3px !important;
+    top: auto !important;
+}
+
+.emojionearea.postCap .emojionearea-picker {
+    top: 85px !important;
+}
+
+.emojionearea.postCap .emojionearea-editor {
+    max-height: 112px !important;
+}
