@@ -90,9 +90,9 @@
             $stmt->bind_param("i", $this->user_id);
             $stmt->execute();
             $results = $stmt->get_result();
-            //var_dump($results);
             if($results->num_rows != 0) {
                 $results = $results->fetch_all(MYSQLI_ASSOC);
+                //var_dump($results);
                 foreach ($results as $user_id) {
                     array_push($this->followers, $user_id['user1']);
                 }
@@ -101,14 +101,14 @@
         }
 
         //$user_id is user1 ($_SESSION['user_id']); $this->user_id is user2
-
+        //follow
         public function addRelationship($user_id){
             $sql = "INSERT INTO relationships(`user1`, `user2`) VALUES (?,?)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("ii",$user_id, $this->user_id);
             $stmt->execute();
             if ($stmt->affected_rows == 1){
-                header("Location: profile.php?user_id=".$this->user_id);
+                header("Location:profile.php?user_id=".$this->user_id);
             }
         }
 
