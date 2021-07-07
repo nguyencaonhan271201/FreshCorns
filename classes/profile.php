@@ -107,11 +107,19 @@
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("ii",$user_id, $this->user_id);
             $stmt->execute();
-            $results = $stmt->get_result();
+            if ($stmt->affected_rows == 1){
+                header("Location: profile.php?user_id=".$this->user_id);
+            }
         }
 
         public function deleteRelationship($user_id){
-
+            $sql = "DELETE FROM relationships WHERE user1 = ? AND user2 = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ii",$user_id, $this->user_id);
+            $stmt->execute();
+            if ($stmt->affected_rows == 1){
+                header("Location:profile.php?user_id=".$this->user_id);
+            }
         }
 
     }
