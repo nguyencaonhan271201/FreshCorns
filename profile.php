@@ -1,17 +1,20 @@
 <?php
     include 'include/header.php';
-?>
+    include 'classes/profile.php';
+    //Dummy database for $_SESSION;
+    $_SESSION['signed_in'] = true;
+    $_SESSION['user_id'] = 1;
+    $_SESSION['username'] = 'trang';
+    $_SESSION['name'] = 'Ho Trang';
+    $_SESSION['profile_image'] = 'imgs/0.png';
+    //End dummy
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-</head>
-<body>
+    $profile = new Profile($conn, $_SESSION['user_id']);
+    $profile->getFollowing();
+    $profile->getFollowers();
+    //var_dump($profile);
+
+?>
     <div class="container" style="width: fit-content;">
         <div class="row">
             <div class="col-12 grid-margin">
@@ -20,36 +23,38 @@
                                             position: relative;
                                             border-radius: 25rem 25rem 0 0;">
                         <figure>
+                        <!-- Cover -->
+                            <img src="<?php echo $profile->profile_cover; ?>" class="img-fluid" alt="profile cover" 
+                                style="height: 80vh;">
                             <div class="cover-body d-flex justify-content-between align-items-center" style="
                                         margin: 5px 15px;
                                         z-index: 2;
                                         position: absolute;
                                         bottom: 10px;
                                         width: 95%;">
-                            <div>
+                                <div>
                             <!-- Profile pic -->
-                                <img class="profile-pic" src="imgs/1.png" alt="profile" style="
+                                    <img class="profile-pic" src="<?php echo $profile->profile_img; ?>" alt="profile_img" style="
                                                                 border-radius: 50%;
                                                                 width: 100px;
                                                                 height: 100px;">
-                                <span class="profile-name" style="
+                                    <span class="profile-name" style="
                                                             margin-left: 20px;
                                                             font-size: 20px;
                                                             font-weight: 600;">
                             <!-- Username -->
-                                Hahahah</span>
+                                    <?php echo $profile->display_name; ?></span>
+                                </div>
+                                <div class="d-none d-md-block">
+                                    <button class="btn btn-primary btn-icon-text btn-edit-profile">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit btn-icon-prepend">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg> Edit profile
+                                    </button>
+                                </div>
                             </div>
-                            <div class="d-none d-md-block">
-                                <button class="btn btn-primary btn-icon-text btn-edit-profile">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit btn-icon-prepend">
-                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                    </svg> Edit profile
-                                </button>
-                            </div>
-                            </div>
-                        <!-- Cover -->
-                            <img src="https://bootdey.com/img/Content/bg1.jpg" class="img-fluid" alt="profile cover">
+
                         </figure>           
                     </div>
                 <!-- Header links icon using svg -->
@@ -76,7 +81,21 @@
                                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                             </svg>
                             <!-- Following count show -->
-                            <a class="pt-1px d-none d-md-block" href="#">Follower <span class="text-muted tx-12">30</span></a>
+                            <a class="pt-1px d-none d-md-block" href="#">Following <span class="text-muted tx-12">
+                                <?php echo count($profile->following);?>
+                            </span></a>
+                        </li>
+                        <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users mr-1 icon-md">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <!-- Followers count show -->
+                            <a class="pt-1px d-none d-md-block" href="#">Followers <span class="text-muted tx-12">
+                                <?php echo count($profile->followers);?>
+                            </span></a>
                         </li>
                     </ul>
                 </div>
@@ -120,7 +139,7 @@
                             </div>
                         </div>
                         <!--Description  -->
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat necessitatibus neque modi magnam reprehenderit sint totam, aliquam, exercitationem officia consequuntur possimus similique rerum. Minus ipsam commodi eaque officia err</p>
+                        <p><?php echo $profile->description;?></p>
                         <div class="mt-3">
                             <label class="tx-11 font-weight-bold mb-0 text-uppercase">Joined:</label>
                             <!--Joined  -->
@@ -129,7 +148,7 @@
                         <div class="mt-3">
                             <label class="tx-11 font-weight-bold mb-0 text-uppercase">Email:</label>
                             <!-- Mail -->
-                            <p class="text-muted">abc@gmail.com</p>
+                            <p class="text-muted"><?php echo $profile->email;?></p>
                         </div>
                     </div>
                 </div>
@@ -140,8 +159,9 @@
                     <div class="col-md-12 grid-margin">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="d-flex align-items-center">
-                                <img class="img-xs rounded-circle" src="" alt="">
+                                <img class="img-xs rounded-circle" style="height: 10vh;" src="<?php echo $profile->profile_img ?>" alt="">
                                 <div class="ml-2">
+                                    <!-- get posts -->
                                     <p>Dummy post</p>
                                     <p class="tx-11 text-muted">1 min ago</p>
                                 </div>
@@ -152,8 +172,6 @@
             </div>
     </div>
     </div>
-</body>
-</html>
 
 <?php
     include 'include/footer.php';
