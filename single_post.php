@@ -1,6 +1,6 @@
 <?php
     require_once 'includes/php/db.php';
-    require_once 'feed/post.php';
+    require_once 'classes/Post.php';
     include "includes/header.php";
     include "classes/Comment.php";
     if (isset($_GET['id'])){
@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/css/selectize.bootstrap4.min.css" integrity="sha512-MMojOrCQrqLg4Iarid2YMYyZ7pzjPeXKRvhW9nZqLo6kPBBTuvNET9DBVWptAo/Q20Fy11EIHM5ig4WlIrJfQw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="feed/style.css?v=<?=time();?>">
+    <link rel="stylesheet" href="includes/css/feed.css?v=<?=time();?>">
     <link rel="stylesheet" href="includes/css/style.css?v=<?=time();?>">
     <script
     src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -46,25 +46,36 @@
                 <?php if($post->post['share_from'] == null):?>
                 <div class="feedCard container-fluid p-0" id="<?php echo htmlspecialchars($post->post_id) ?>">
                     <div class="d-flex pr-3">
-                        <div class="cardUserImg">
+                        <a href="profile.php?id=<?php echo $post->post['user'];?>" class="cardUserImg">
                             <img src="<?php echo htmlspecialchars($post->post['profile_image'])?>">
-                        </div>
+                        </a>
 
                         <div class="cardInfos container-fluid p-0">
                             <div>
                                 <h2>
-                                <a href=""><?php echo htmlspecialchars($post->post['display_name'])?></a> 
+                                <a href="profile.php?id=<?php echo $post->post['user'];?>"><?php echo htmlspecialchars($post->post['display_name'])?></a> 
                                 talking about 
-                                <a class="movie_title" id='
-                                <?php echo json_encode(array('movie_id'=>$post->post['movie_id'],'movie_type'=>$post->post['movie_type']))?>' href=""></a> 
+                                <a class="movie_title" 
+                                id='<?php echo json_encode(array('movie_id'=>$post->post['movie_id'],'movie_type'=>$post->post['movie_type']))?>' 
+                                href="movie.php?id=<?php echo $post->post['movie_id']?>&type=<?php echo $post->post['movie_type']?>"></a> 
                                 • <?php echo htmlspecialchars(getTimeString($post->post['date_created']))?>
-                                • <span class="cardMode" id="<?php echo htmlspecialchars($post->post['mode'])?>"><?php echo $mode_text ?></span>
+                                • <span class="cardMode" data-tooltip-location="bottom" data-tooltip=<?php 
+                                    if ($post->post['mode'] == 1)
+                                        echo "Public";
+                                    elseif ($post->post['mode'] == 2)
+                                        echo "Followers";
+                                    else
+                                        echo "Private";
+                                ?>
+                                id="<?php echo htmlspecialchars($post->post['mode'])?>"><?php echo $mode_text ?></span>
                                 </h2>
                             </div>
 
                             <p><?php echo htmlspecialchars($post->post['content'])?></p>      
-                                
-                            <img src="<?php echo htmlspecialchars($post->post['media'])?>" onerror="this.style.display='none'">
+
+                            <div class="cardMedia">  
+                                <img src="<?php echo htmlspecialchars($post->post['media'])?>" onerror="this.style.display='none'">
+                            </div>
                         </div>
                     </div>   
                 
@@ -116,7 +127,15 @@
                                 <h2>
                                 <a href=""><?php echo htmlspecialchars($post->post['display_name'])?></a> 
                                 • <?php echo htmlspecialchars(getTimeString($post->post['date_created']))?>
-                                • <span class="cardMode" id="<?php echo htmlspecialchars($post->post['mode'])?>"><?php echo $mode_text ?></span>
+                                • <span class="cardMode" data-tooltip-location="bottom" data-tooltip=<?php 
+                                    if ($post->post['mode'] == 1)
+                                        echo "Public";
+                                    elseif ($post->post['mode'] == 2)
+                                        echo "Followers";
+                                    else
+                                        echo "Private";
+                                ?>
+                                id="<?php echo htmlspecialchars($post->post['mode'])?>"><?php echo $mode_text ?></span>
                                 </h2>
                             </div>   
                         </div>
@@ -124,24 +143,32 @@
                         <div class="share-content">
                             <div class="feedCard container-fluid p-0">
                                 <div class="d-flex pr-3">
-                                    <div class="cardUserImg">
+                                    <a href="profile.php?id=<?php echo $post->post['original']['user'];?>" class="cardUserImg">
                                         <img src="<?php echo htmlspecialchars($post->post['original']['profile_image'])?>">
-                                    </div>
+                                    </a>
 
                                     <div class="cardInfos container-fluid p-0">
                                         <div>
                                             <h2>
-                                            <a href=""><?php echo htmlspecialchars($post->post['original']['display_name'])?></a> 
-                                            is talking about 
+                                            <a href="profile.php?id=<?php echo $post->post['original']['user'];?>"><?php echo htmlspecialchars($post->post['original']['display_name'])?></a> 
+                                            talking about 
                                             <a class="movie_title" id='
                                             <?php echo json_encode(array('movie_id'=>$post->post['original']['movie_id'],'movie_type'=>$post->post['original']['movie_type']))?>' href=""></a> 
                                             • <?php echo htmlspecialchars(getTimeString($post->post['original']['date_created']))?>
-                                            • <span class="cardMode" id="<?php echo htmlspecialchars($post->post['original']['mode'])?>"><?php echo $mode_text ?></span>
+                                            • <span class="cardMode" data-tooltip-location="bottom" data-tooltip=<?php 
+                                                if ($post->post['original']['mode'] == 1)
+                                                    echo "Public";
+                                                elseif ($post->post['original']['mode'] == 2)
+                                                    echo "Followers";
+                                                else
+                                                    echo "Private";
+                                            ?>
+                                            id="<?php echo htmlspecialchars($post->post['original']['mode'])?>"><?php echo $mode_text ?></span>
                                             </h2>
                                         </div>
 
                                         <p><?php echo htmlspecialchars($post->post['original']['content'])?></p>      
-                                            
+                                        
                                         <img src="<?php echo htmlspecialchars($post->post['original']['media'])?>" onerror="this.style.display='none'">
                                     </div>
                                 </div>   
@@ -270,10 +297,11 @@
 </body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/js/standalone/selectize.min.js" integrity="sha512-pF+DNRwavWMukUv/LyzDyDMn8U2uvqYQdJN0Zvilr6DDo/56xPDZdDoyPDYZRSL4aOKO/FGKXTpzDyQJ8je8Qw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="includes/js/themoviedb.js" charset="utf-8"></script>    
-    <script type="text/javascript" src="feed/main.js" charset="utf-8"></script>    
-    <script type="text/javascript" src="feed/img_preview.js" charset="utf-8"></script>
-    <script type="text/javascript" src="feed/feed.js" charset="utf-8"></script>
+    <script type="text/javascript" src="includes/js/main.js" charset="utf-8"></script>    
+    <script type="text/javascript" src="includes/js/img_preview.js" charset="utf-8"></script>
+    <script type="text/javascript" src="includes/js/feed.js" charset="utf-8"></script>
     <script type="text/javascript" src="includes/js/singlePost.js" charset="utf-8"></script>
 </html>
 

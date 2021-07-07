@@ -1,6 +1,6 @@
 <?php
     session_start();
-    require_once('../includes/php/db.php');
+    require_once('../db.php');
     if (isset($_GET['post_id']) && isset($_SESSION['user_id'])){
         $result = getRows($conn,'
         SELECT COUNT(*) as reacts

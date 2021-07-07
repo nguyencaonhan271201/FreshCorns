@@ -29,12 +29,15 @@
                                 echo $_POST['username'];
                             }
                         ?>">
-                        <p class="error"><?php if(isset($errors['username'])) {echo $errors['username'];}?></p>
+                        <p class="error"><?php 
+                            if(isset($errors['username'])) {echo $errors['username'];}
+                        ?>
+                        </p>
                     </div>
                     <div class="form-group">
                         <!-- <label for="password">Password</label> -->
                         <input class="form-control" type="password" name="password" placeholder="Password">
-                        <p class="error"><?php if(isset($errors['password'])) {echo $errors['password'];}?></p>
+                        <p class="error"><?php if(isset($errors['wrong_pass'])) {echo $errors['wrong_pass'];}?></p>
                     </div>
                     <button class="btn btn-primary btn-block" role="submit" name="submit">Sign In</button>
                     <?php if (isset($errors['execute_err'])): ?>

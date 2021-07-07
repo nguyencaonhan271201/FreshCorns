@@ -24,20 +24,35 @@ h2{
     position: relative;
 }
 
+.postForm h2{
+    white-space: nowrap;
+}
+
+.postForm .selectize-input{
+    background-color: #F8F9FA;
+}
+
 .postForm button{
     position: absolute;
     bottom: 0;
     right: 0;
+    color: white;
+    background-color: #0082FF;
+    border-radius: 20px;
+    border: none;
 }
 
 .feedCard{
     position: relative;
     height: fit-content;
     min-height: 100px;
-    border: 2px solid black;
-    border-radius: 20px;
+    border-radius: 20px;   
     /* overflow: hidden; */
     margin: 20px 0;
+}
+
+.cardInfos{    
+    padding-top: 10px!important;
 }
 
 .limited_text{
@@ -67,24 +82,47 @@ h2{
     position: relative;
 }
 
+.cardMedia img, .postFile_preview_div img{
+    margin: 20px 0;
+} 
+
+.cardMedia img[src*=""], .postFile_preview_div img[src*=""]{
+    margin: 0!important;
+}
+
 .delMediaBtn{
     position: absolute;
     top: 0;
     right: 0;
-    height: fit-content;
+    margin: 15px 8px;
+    height: fit-content;    
+    background-color: rgb(0, 0, 0, 0.3)!important;
+    color: white;
+    border: none;
+    border-radius: 50%;
 }
 
 .editMedia{
     position: absolute;
     bottom: 0;
     left: 0;
-    background-color: white;
+    margin: 15px;
 }
 
-.feedCard .cardChin{
-    margin-top: 20px;
+.editMedia i{    
+    color: white;
+    margin: 2px;
+}
+
+.cardChin{
     height: 50px;
-    background-color: gold;
+    padding-top: 10px;
+    background-color: #0082FF;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 }
+
+.cardChin i{
+    color: white;
+}
+

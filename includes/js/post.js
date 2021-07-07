@@ -1,6 +1,3 @@
-// let my_id;
-// let my_name;
-// let my_image;
 let loadedComments = [];
 
 function sanitize(content) {
@@ -14,21 +11,6 @@ function sanitize(content) {
     };
     const reg = /[&<>"'/]/ig;
     return content.replace(reg, (match)=>(map[match]));
-}
-
-function updateSessionInfo() {
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "././includes/php/sessionInfoRequestHandler.php", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.onload = function() {
-        if(this.status == 200) {
-            let result = JSON.parse(this.responseText);
-            my_id = result['user_id'];
-            my_name = result['name'];
-            my_image = result['profile_img'];
-        }
-    }
-    xhr.send(`page=chat`);
 }
 
 if (document.querySelector("#btn-post-image") != null) {

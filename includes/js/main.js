@@ -1,6 +1,11 @@
-let prevScrollpos = window.pageYOffset;
+let my_id;
+let my_name;
+let my_image;
+let absolute_path;
+
+//let prevScrollpos = window.pageYOffset;
 let moviesSearch = [];
-window.onscroll = function() {
+/*window.onscroll = function() {
     // let currentScrollPos = window.pageYOffset;
     // if (prevScrollpos > currentScrollPos) {
     //     document.querySelector(".navbar").style.top="-1px";
@@ -8,7 +13,7 @@ window.onscroll = function() {
     //     document.querySelector(".navbar").style.top="-20vh";
     // }
     // prevScrollpos = currentScrollPos;
-}
+}*/
 
 //Handle header search
 let headerSearchInput = document.querySelector("#header-search");
@@ -102,4 +107,68 @@ function outputHeaderSearchMovies(query) {
             }
         }
     })
+}
+
+$(document).ready(function(){
+    loadMovieTitles();
+    loadNoReactions();
+    updateSessionInfo();
+})
+
+function updateSessionInfo() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "././includes/php/sessionInfoRequestHandler.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function() {
+        if(this.status == 200) {
+            let result = JSON.parse(this.responseText);
+            my_id = result['user_id'];
+            my_name = result['name'];
+            my_image = result['profile_img'];
+            loadPosts();
+        }
+    }
+    xhr.send(`page=chat`);
+}
+  
+function loadMovieTitles(){
+$("a.movie_title").each(function(i,obj){
+let result = JSON.parse($(this).attr('id'));
+//console.log(result);
+if (result['movie_type']) theMovieDb.movies.getById({"id":result['movie_id']}, data => {
+$(this).html(JSON.parse(data)['title']);
+}, data =>{
+
+});
+else theMovieDb.tv.getById({"id":result['movie_id']},  data => {
+    $(this).html(JSON.parse(data)['name']);
+}, data =>{
+
+});
+
+});
+}
+
+function loadNoReactions(){
+    $(".cardReact").each(function(i,obj){
+        let temp = $(this);
+        $.ajax({
+            url:`includes/php/feed/ajax_react_post_get.php?post_id=${temp.attr('id')}`,
+            success:function(data){
+                temp.html(data);
+            }
+        });
+        $.ajax({
+            url:`includes/php/feed/ajax_reacted_post_check.php?post_id=${temp.attr('id')}`,
+            success:function(data){
+                if(data!=0) {
+                    temp.removeClass("far");
+                    temp.addClass("fas");
+                } else {
+                temp.removeClass("fas");
+                temp.addClass("far");
+                }
+            }
+        });
+    });
 }

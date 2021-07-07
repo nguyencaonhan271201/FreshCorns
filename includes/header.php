@@ -26,7 +26,7 @@
 
         $timeDifference = $now - $dt;
         //Time zone
-        $timeDifference += 3600 * 7;
+        //$timeDifference += 3600 * 7;
         $aWeek = 86400 * 7;
 
         if ($timeDifference < 3600)
@@ -51,12 +51,16 @@
         }
         return "{$getValue} {$getUnit}";
     }
+
+    $header_tags = [ "index" => "Home", "single_post" => "Single Post", "chat" => "Chat", "feeds" => "News Feed",
+                    "signin" => "Join", "movie" => "Movie", "change_pass" => "Change Password", "edit_profile" => "Edit Profile",
+                    "profile" => "Profile"];
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Fresh Corns | <?php echo ucfirst($site_name);?></title>
+        <title>Fresh Corns | <?php echo $header_tags[$site_name];?></title>
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

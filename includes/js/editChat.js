@@ -73,7 +73,7 @@ function executeEditResult(results) {
 
     if (Object.keys(errors).length === 0) {
         ajaxRoomsList(2);
-        resetModal();
+        editChatResetModal();
     }
 }
 

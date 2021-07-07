@@ -3,8 +3,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/css/selectize.bootstrap4.min.css" integrity="sha512-MMojOrCQrqLg4Iarid2YMYyZ7pzjPeXKRvhW9nZqLo6kPBBTuvNET9DBVWptAo/Q20Fy11EIHM5ig4WlIrJfQw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<div id='php_return'></div>
-
 <div class="postDiv container-fluid d-flex p-0">
     <div class="postUserImg">
         <img src="<?php echo $_SESSION['profile_img']?>">
@@ -13,7 +11,7 @@
 
     <div class="container-fluid">
         <form class="postForm" name="form" action="" method="post" enctype="multipart/form-data">
-            <div class="d-flex">                                           
+            <div class="d-flex justify-content-center align-items-center">                                           
                 <h2>talking about</h2>                                
                 <div class="container-fluid">
                     <select class="postMvVl"></select>

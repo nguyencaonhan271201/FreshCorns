@@ -1,5 +1,5 @@
 <?php
-    require_once('../includes/php/db.php');
+    require_once('../db.php');
     if (isset($_GET['post_id'])){
         echo getRows($conn,'
         SELECT COUNT(*) as reacts

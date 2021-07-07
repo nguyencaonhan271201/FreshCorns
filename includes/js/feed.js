@@ -1,8 +1,6 @@
 let selectizeControl;
 
 $(document).ready(function(){
-  loadPosts('feed/ajax_post_get_public.php',$('#public'));
-  loadPosts('feed/ajax_post_get_following.php',$('#following'));
   selectizeControl = selectizeSelect($('.postMvVl'));
 });
 
@@ -90,13 +88,14 @@ $('.postFile_preview').on('load',function(){
   });
 });
 
-$("form").submit(e => {
+$("form.postForm").submit(e => {
   e.preventDefault();
-  let parent = $(this);
+  let parent = this;
 
-  if (this.$('.postMvVl').val()=='') this.$('.selectize-input').effect("shake");
-  //if cap trống
-  else {
+  if (parent.$('.postMvVl').val()=='') this.$('.selectize-input').effect("shake");
+  if (parent.$('.emojionearea-editor').html() == '') this.$('.emojionearea.postCap').effect("shake");
+  if ((parent.$('.postMvVl').val() != '') && (parent.$('.emojionearea-editor').html() != ''))
+  {
     let postData = new FormData();
     postData.append('postUser',my_id);
     postData.append('postCap',this.$('.postCap').val());
@@ -106,7 +105,7 @@ $("form").submit(e => {
     postData.append('postMode',this.$('.postMode').val());
     
     $.ajax({
-      url: 'feed/ajax_post_add.php',
+      url: 'includes/php/feed/ajax_post_add.php',
       type:'POST',
       data: postData,
       processData: false,
@@ -114,11 +113,22 @@ $("form").submit(e => {
       success: function(data){
         //$('#php_return').html(data);
         if (data) {
-          if (this.$('.postMode').val()==1) loadPosts('feed/ajax_post_get_public.php',$('#public'));
-          else loadPosts('feed/ajax_post_get_following.php',$('#following'));
-          parent.trigger('reset');
+
+          if (parent.$('.postMode').val()==1) {
+            loadPosts();
+            $('#myTab a#public-tab').tab('show');
+          }
+          else {
+            loadPosts();            
+            $('#myTab a#following-tab').tab('show');
+          }
+
+          $("form.postForm").trigger('reset');          
+          parent.$('.postFile').val('');
+          parent.$('.postFile_preview').attr('src','');
+          parent.$('.delMediaBtn').remove();
           selectizeControl.clearOptions();
-          parent.find('.emojionearea-editor').val('');
+          parent.$('.emojionearea-editor').html('');
         }
       }
     });
@@ -126,20 +136,34 @@ $("form").submit(e => {
 });
 
 $('#myTab a').on('click', function (event) {
-  event.preventDefault()
-  $(this).tab('show')
+  event.preventDefault();
+  $(this).tab('show');
 })
 
-function loadPosts(ajax_url,div){
+function loadPosts(){
   $.ajax({
-    url: ajax_url,
+    url: 'includes/php/feed/ajax_post_get_public.php',
     success: function(data){
       //console.log(data)
       //$('#php_return').html(data);
       let results = JSON.parse(data);
-      printPosts(div,results);
+      printPosts($('#public'),results);
     }
-  })
+  });
+  $.ajax({
+    url: 'includes/php/feed/ajax_post_get_following.php',
+    success: function(data){
+      //console.log(data)
+      //$('#php_return').html(data);
+      let results = JSON.parse(data);
+      printPosts($('#following'),results);
+    }
+  });
+}
+
+Date.prototype.addHours= function(h){
+  this.setHours(this.getHours() + h);
+  return this;
 }
 
 function printPosts(div,results){
@@ -155,21 +179,23 @@ function printPosts(div,results){
           html = `
           <div class="feedCard container-fluid p-0" id="${result['ID']}">
             <div class="d-flex pr-3">
-              <div class="cardUserImg">
+              <a href="profile.php?id=${result['user']}" class="cardUserImg">
                   <img src="${result['profile_image']}">
-              </div>
+              </a>
 
               <div class="cardInfos container-fluid p-0" id="${result['ID']}">
                   <h2>
-                    <a href="">${result['display_name']}</a> 
+                    <a href="profile.php?id=${result['user']}">${result['display_name']}</a> 
                     talking about 
                     <a class="movie_title" id='${
                       JSON.stringify({
                         movie_id:result['movie_id'],
                         movie_type:result['movie_type']
-                      })}' href=""></a> 
-                    • <a class="cardDate" href="single_post.php?id=${result['ID']}">${getDuration(new Date(result['date_created']))}</a>
-                    • <span class="cardMode" id="${result['mode']}">${mode_text}</span>
+                      })}' href="movie.php?id=${result['movie_id']}&type=${result['movie_type']}"></a> 
+                    • <a class="cardDate" data-tooltip="${new Date(result['date_created']).addHours(7).toLocaleString()}" data-tooltip-location="bottom" 
+                      href="single_post.php?id=${result['ID']}">${getDuration(new Date(result['date_created']))}</a>
+                    • <span class="cardMode" data-tooltip-location="bottom" data-tooltip="${result['mode'] == 1? "Public" : result['mode'] == 2? "Followers" : "Private"}" 
+                      id="${result['mode']}">${mode_text}</span>
                   </h2>
 
                   <p class="limited_text">${result['content']}</p>   
@@ -183,12 +209,10 @@ function printPosts(div,results){
             <div class="cardChin container-fluid">
               <div class="row">
                 <div class="col text-center">
-                  <div clas="d-flex">       
-                    <i class="cardReact far fa-thumbs-up" id="${result['ID']}"> 100</i>
-                  </div>
+                  <i class="cardReact far fa-thumbs-up" id="${result['ID']}"></i>
                 </div>
                 <div class="col text-center">
-                  <i class="cardComment bi bi-chat-text"></i>
+                  <i class="cardComment bi bi-chat-text" id="${result['ID']}"></i>
                 </div>
             `;
             if (my_id == result['user']) html+=`
@@ -214,35 +238,39 @@ function printPosts(div,results){
           html = `
           <div class="feedCard container-fluid p-0" id="${result['ID']}">
             <div class="d-flex pr-3">
-              <div class="cardUserImg">
+              <a href="profile.php?id=${result['user']}" class="cardUserImg">
                   <img src="${result['profile_image']}">
-              </div>
+              </a>
 
               <div class="cardInfos container-fluid p-0" id="${result['ID']}">
                   <h2>
-                    <a href="">${result['display_name']}</a> 
-                    • <a class="cardDate" href="single_post.php?id=${result['ID']}">${getDuration(new Date(result['date_created']))}</a>
-                    • <span class="cardMode" id="${result['mode']}">${mode_text}</span>
+                    <a href="profile.php?id=${result['user']}">${result['display_name']}</a> 
+                    • <a class="cardDate" data-tooltip="${new Date(result['date_created']).addHours(7).toLocaleString()}" data-tooltip-location="bottom"
+                     href="single_post.php?id=${result['ID']}">${getDuration(new Date(result['date_created']))}</a>
+                    • <span class="cardMode" data-tooltip-location="bottom" data-tooltip="${result['mode'] == 1? "Public" : result['mode'] == 2? "Followers" : "Private"}"
+                      id="${result['mode']}">${mode_text}</span>
                   </h2>
 
                   <div class="share-content">
                     <div class="feedCard container-fluid p-0">
                       <div class="d-flex pr-3">
-                        <div class="cardUserImg">
+                        <a href="profile.php?id=${result['original']['user']}" class="cardUserImg">
                             <img src="${result['original']['profile_image']}">
-                        </div>
+                        </a>
 
                         <div class="cardInfos container-fluid p-0">
                             <h2>
-                              <a href="">${result['original']['display_name']}</a> 
+                              <a href="profile.php?id=${result['original']['user']}">${result['original']['display_name']}</a> 
                               talking about 
                               <a class="movie_title" id='${
                               JSON.stringify({
                                 movie_id:result['original']['movie_id'],
                                 movie_type:result['original']['movie_type']
-                              })}' href=""></a> 
-                              • <a class="cardDate" href="single_post.php?id=${result['original']['ID']}">${getDuration(new Date(result['original']['date_created']))}</a>
-                              • <span class="cardMode" id="${result['original']['mode']}">${share_mode_text}</span>
+                              })}' href="movie.php?id=${result['movie_id']}&type=${result['movie_type']}"></a> 
+                              • <a class="cardDate" data-tooltip="${new Date(result['original']['date_created']).addHours(7).toLocaleString()}" data-tooltip-location="bottom"
+                                href="single_post.php?id=${result['original']['ID']}">${getDuration(new Date(result['original']['date_created']))}</a>
+                              • <span class="cardMode" data-tooltip-location="bottom" data-tooltip="${result['original']['mode'] == 1? "Public" : result['original']['mode'] == 2? "Followers" : "Private"}"
+                                id="${result['original']['mode']}">${share_mode_text}</span>
                             </h2>
 
                             <p class="limited_text">${result['original']['content']}</p>   
@@ -261,11 +289,11 @@ function printPosts(div,results){
               <div class="row">
                 <div class="col text-center">
                   <div clas="d-flex">       
-                    <i class="cardReact far fa-thumbs-up" id="${result['ID']}"> 100</i>
+                    <i class="cardReact far fa-thumbs-up" id="${result['ID']}"></i>
                   </div>
                 </div>
                 <div class="col text-center">              
-                  comment
+                  <i class="cardComment bi bi-chat-text" id="${result['ID']}"></i>
                 </div>
             `;
             html+=`
@@ -279,18 +307,22 @@ function printPosts(div,results){
     });  
     
     loadMovieTitles();
-    loadNoReactions();  
-    $(".cardReact").unbind().click(function(){
+    loadNoReactions();
+
+    div.find(".cardReact").click(function(){
       ReactPost($(this));
     });
-    $(".cardEdit").unbind().click(function(){
+    div.find(".cardEdit").click(function(){
       EditPost($(this));
     });  
-    $(".cardShare").unbind().click(function(){
+    div.find(".cardShare").click(function(){
       document.querySelector("#shareConfirmationModal").querySelector("#sharePostID").innerHTML = $(this).attr('id'); 
       $("#shareConfirmationModal").modal("show");
     });
-
+    div.find(".cardComment").click(function(){
+      let id = $(this).attr('id');
+      window.location.href = `single_post.php?id=${id}`;
+    });  
     document.querySelectorAll(".feedCard").forEach(box => {
       box.addEventListener("click", function(e) {
           let target = e.target;
@@ -316,11 +348,11 @@ function printPosts(div,results){
           }
       })
     });
-};
+}
 
 function ReactPost(object){
   $.ajax({
-    url:`feed/ajax_react_post_add.php?post_id=${object.attr('id')}`,
+    url:`includes/php/feed/ajax_react_post_add.php?post_id=${object.attr('id')}`,
     success:function(data){
       if (data==1) loadNoReactions();
     }
@@ -347,6 +379,9 @@ function EditPost(object){
   let chin = parent.find('.cardChin');
 
   p.replaceWith(`<textarea class="postCap" name="caption">${p.text()}</textarea>`);
+  parent.find('textarea.postCap').emojioneArea({
+    inline: false,
+  }); 
   
   movie_title.replaceWith(`<select class="postMvVl"></select>`);
   selectizeSelect(parent.find("select"),{
@@ -371,7 +406,7 @@ function EditPost(object){
   });
 
   mediaCard.prepend(`
-  <div class="editMedia">
+  <div class="editMedia d-flex justify-content-center align-items-center">
     <label>
       <i class="bi bi-image"></i>
         <input class="postFile" type="file" name="create_user_img" accept="image/png, image/jpeg">
@@ -412,29 +447,28 @@ function EditPost(object){
     </div>
   </div>
   `);
+  
   parent.find('.editCancel').click(function(){
     parent.find('.cardInfos h2').html(backup_header_h2);
-    parent.find('.postCap').replaceWith(p);
+    parent.find('.emojionearea.postCap').replaceWith(p);
     mediaCard.html(`<img src="${backup_media_src}" class="media">`);
     parent.find('.cardChin_edit').remove();
     chin.show();
   });
   parent.find('.editDelete').click(function(){
     $.ajax({
-      url: `feed/ajax_post_delete.php?postId=${id}`,
+      url: `includes/php/feed/ajax_post_delete.php?postId=${id}`,
       success: function(data){
         //$('#php_return').html(data);
-        loadPosts('feed/ajax_post_get_public.php',$('#public'));
+        loadPosts();
       }
     });
   });
-  $('.postCap').emojioneArea({
-    inline: false,
-  }); 
   parent.find('.editSubmit').click(function(){
 
     if (parent.find('.postMvVl').val()=='') parent.find('.selectize-input').effect("shake");
-    //if cap trống
+    if (parent.find('.emojionearea-editor').html() == '') parent.find('.emojionearea.postCap').effect("shake");
+    
     else {
       let postData = new FormData();
       postData.append('postUser',my_id);
@@ -452,7 +486,7 @@ function EditPost(object){
       postData.append('postMode',parent.find('.postMode').val());
 
       $.ajax({
-        url: 'feed/ajax_post_edit.php',
+        url: 'includes/php/feed/ajax_post_edit.php',
         type:'POST',
         data: postData,
         processData: false,
@@ -463,9 +497,7 @@ function EditPost(object){
         }
       });
     };
-  });
-
-  
+  });  
 }
 
 function showImageBox() {
@@ -487,7 +519,7 @@ function loadImage(src) {
 }
 
 function getDuration(epochTime) {
-  let timeDifference = Date.now() - epochTime;
+  let timeDifference = Date.now() - epochTime - 3600000 * 7;
   let aWeek = 86400000 * 7;
   let getValue;
   let getUnit;

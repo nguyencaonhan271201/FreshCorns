@@ -1,13 +1,13 @@
 <?php 
     session_start();
-    require_once ("../includes/php/db.php");
-    require_once ("filemanager.php");
-    require_once ("post.php");
+    require_once ("../db.php");
+    require_once ("../filemanager.php");
+    require_once ("../../../classes/Post.php");
       
   if (Post::checkPost($_POST)) {
     $media = null;
     if (isset($_FILES['postFile'])) {
-        if (checkFile($_FILES['postFile'])) $media = saveFile($_FILES['postFile'],"assets/images/posts/",dirname(__DIR__,1).'/');
+        if (checkFile($_FILES['postFile'])) $media = saveFile($_FILES['postFile'],"assets/images/posts/",dirname(__DIR__,3).'/');
     };
 
     $myPost = new Post($conn);

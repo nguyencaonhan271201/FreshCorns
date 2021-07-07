@@ -1,5 +1,4 @@
 function previewFile(input,img){
-    console.log('yes');
     var file = input.files[0];
     if(file){
         var reader = new FileReader();

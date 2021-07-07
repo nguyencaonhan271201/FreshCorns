@@ -56,7 +56,7 @@ function executeCreateRoomResult(results) {
                 item.classList.add("selected");
                 roomID = getRoomID;         
                 ajaxGetSingleRoomInfo(getRoomID);
-                resetModal();
+                createChatResetModal();
                 return;
             }
         });
@@ -90,7 +90,7 @@ function executeCreateRoomResult(results) {
         })
         //Set timeout to wait for the trigger event of Firebase to be executed first
         ajaxRoomsList(3, getRoomID);
-        resetModal();
+        createChatResetModal();
     }
 }
 

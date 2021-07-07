@@ -82,6 +82,11 @@ function loadComments() {
     })
 }
 
+Date.prototype.addHours= function(h){
+    this.setHours(this.getHours() + h);
+    return this;
+}
+
 function outputComments(result) {
     result.forEach(comment => {
         let commentID = comment['ID'];
@@ -105,6 +110,7 @@ function outputComments(result) {
         }
         let dateCreated = comment['date_created'];
         let epochDateCreated = new Date(dateCreated);
+        let dateCreatedTimeZone = new Date(dateCreated).addHours(7).toLocaleString();
         let displayName = comment['display_name'];
         let profileImage = comment['profile_image'];
         let commentParent = comment['parent'];
@@ -189,7 +195,7 @@ function outputComments(result) {
                         <span>·</span>
                         <a href="#" class="comment-reply">Reply</a>
                         <span>·</span>
-                        <span data-tooltip="${dateCreated}" data-tooltip-location="top">
+                        <span data-tooltip="${dateCreatedTimeZone}" data-tooltip-location="top">
                             ${getDuration(epochDateCreated)}
                         </span>
                     </span>
@@ -251,7 +257,7 @@ function outputComments(result) {
                         <span>·</span>
                         <a href="#" class="comment-reply">Reply</a>
                         <span>·</span>
-                        <span data-tooltip="${dateCreated}" data-tooltip-location="top">
+                        <span data-tooltip="${dateCreatedTimeZone}" data-tooltip-location="top">
                             ${getDuration(epochDateCreated)}
                         </span>
                     </span>
@@ -297,7 +303,6 @@ function outputComments(result) {
         }, 100)
     })
 
-    //checkEmojiInput();
     document.querySelectorAll(".comment").forEach((commentDiv) => {
         let numberOfReplies = commentDiv.querySelectorAll(".replies-list .comment").length;
         if (numberOfReplies > 0) {
@@ -614,7 +619,7 @@ function handleCommentSubmit(type, element) {
 }
 
 function getDuration(epochTime) {
-    let timeDifference = Date.now() - epochTime;
+    let timeDifference = Date.now() - epochTime - 3600000 * 7;
     let aWeek = 86400000 * 7;
     let getValue;
     let getUnit;
@@ -812,8 +817,6 @@ function outputNewComment(result) {
         parent.appendChild(commentDiv);
     }
 
-    
-
     setTimeout(() => {
         $(`#comment-${commentID} .reply_inp`).emojioneArea({
             search: false,
@@ -874,3 +877,14 @@ function sharePost(postID, mode) {
     xhr.send(`post_share&postID=${postID}&mode=${mode}`);
     $("#singlePostShareConfirmationModal").modal("hide");
 }
+
+$(".cardReact").click(function(){
+    ReactPost($(this));
+  });
+$(".cardEdit").click(function(){
+    EditPost($(this));
+});  
+$(".cardShare").click(function(){
+    document.querySelector("#shareConfirmationModal").querySelector("#sharePostID").innerHTML = $(this).attr('id'); 
+    $("#shareConfirmationModal").modal("show");
+});

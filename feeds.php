@@ -4,14 +4,14 @@
     include "classes/Comment.php";
     $errors = [];
 
-    if (isset($_POST['create_post']) && $_POST['csrf'] == $_SESSION['csrf_token']) {
+    /*if (isset($_POST['create_post']) && $_POST['csrf'] == $_SESSION['csrf_token']) {
         $post = new Post($db->conn);
         $post->createPost($_SESSION, $_POST, $_FILES, $errors);
     } elseif (!isset($post)) {
         $post = new Post($db->conn);
     }
 
-    $post->getPosts();
+    $post->getPosts();*/
 
     $chat_room = new ChatRoom($db->conn);
     if ($_SESSION['signed_in']) {
@@ -28,7 +28,7 @@
   crossorigin="anonymous"></script>
 <link rel="stylesheet" href="./includes/css/chat.css">
 <link rel="stylesheet" href="./includes/css/emoji/emojionearea.min.css">
-<link rel="stylesheet" href="./feed/style.css">
+<link rel="stylesheet" href="./includes/css/feed.css">
 <script src="./includes/js/emoji/emojionearea.min.js"></script>
 
 <div id="main-container" class="feed-container container-fluid p-0 m-0 row" style="height: 100vh;">
@@ -37,12 +37,12 @@
             <div class="films-list p-0 m-0">
                 
                 <div class="films-items">
-                    <h6 class="ml-2">Movies</h6>
+                    <h1 class="ml-2"><i class="fas fa-fire-alt"></i>Movies</h6>
                     <hr class="m-0">
                     <div class="films">
 
                     </div>
-                    <h6 class="ml-2">TV Series</h6>
+                    <h1 class="ml-2"><i class="fas fa-fire-alt"></i>TV Series</h6>
                     <hr class="m-0">
                     <div class="TVs">
                     
@@ -54,7 +54,10 @@
         </div>
     </div>
 
+    
     <div class="mid-box mx-auto col-lg-6 col-md-8 col-sm-12 p-0 m-0">
+        <div id='php_return'></div>
+
         <div class="create-post-box d-flex flex-row m-3">
             <?php if (!isset($_GET['edit_post']) && !isset($_POST['edit_post'])) { 
                 include 'create_post.php';
@@ -239,12 +242,11 @@
     <img src="" alt="">
 </div>
 
-<script src="includes/js/post.js"></script>
-<script type="text/javascript" src="feed/main.js" charset="utf-8"></script>
-<script type="text/javascript" src="feed/img_preview.js" charset="utf-8"></script>
-<script type="text/javascript" src="feed/feed.js" charset="utf-8"></script>
-<script type="text/javascript" src="includes/js/themoviedb.js" charset="utf-8"></script>    
 <script src="includes/js/main.js"></script>
+<script src="includes/js/post.js"></script>
+<script type="text/javascript" src="includes/js/img_preview.js" charset="utf-8"></script>
+<script type="text/javascript" src="includes/js/themoviedb.js" charset="utf-8"></script>    
+<script type="text/javascript" src="includes/js/feed.js" charset="utf-8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
 
