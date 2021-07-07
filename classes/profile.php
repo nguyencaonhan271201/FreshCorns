@@ -100,5 +100,19 @@
             return 0;
         }
 
+        //$user_id is user1 ($_SESSION['user_id']); $this->user_id is user2
+
+        public function addRelationship($user_id){
+            $sql = "INSERT INTO relationships(`user1`, `user2`) VALUES (?,?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ii",$user_id, $this->user_id);
+            $stmt->execute();
+            $results = $stmt->get_result();
+        }
+
+        public function deleteRelationship($user_id){
+
+        }
+
     }
 ?>

@@ -1,6 +1,7 @@
 <?php
     include 'include/header.php';
     include 'classes/profile.php';
+    
     //Dummy database for $_SESSION;
     $_SESSION['signed_in'] = true;
     $_SESSION['user_id'] = 1;
@@ -9,10 +10,18 @@
     $_SESSION['profile_image'] = 'imgs/0.png';
     //End dummy
 
-    $profile = new Profile($conn, $_SESSION['user_id']);
+    if(isset($_GET['user_id'])){
+        $cur_user_id = $_GET['user_id'];
+    }
+    else $cur_user_id = $_SESSION['user_id'];
+
+    $cur_user_id = 3;
+
+    $profile = new Profile($conn, $cur_user_id);
+    
     $profile->getFollowing();
     $profile->getFollowers();
-    //var_dump($profile);
+    var_dump($profile);
 
 ?>
     <div class="container" style="width: fit-content;">
@@ -46,12 +55,28 @@
                                     <?php echo $profile->display_name; ?></span>
                                 </div>
                                 <div class="d-none d-md-block">
+                            <!-- Button -->
+                                <?php if($_SESSION['signed_in']): ?>
+                                    <!-- Edit profile -->
+                                    <?php if($_SESSION['user_id'] == $cur_user_id): ?>
                                     <button class="btn btn-primary btn-icon-text btn-edit-profile">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit btn-icon-prepend">
                                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg> Edit profile
+                                        </svg>
+                                        <a href="" style="color: white;">Edit profile</a>
                                     </button>
+                                    <!-- Unfollow -->
+                                    <?php elseif(in_array($_SESSION['user_id'], $profile->followers)): ?>
+                                        <button class="btn btn-danger btn-unfollow">
+                                        <a href="" style="color: Yellow;">Unfollow</a>
+                                    </button>
+                                    <!-- Follow -->
+                                    <?php else: ?>
+                                        <button class="btn btn-success btn-follow">
+                                        <a href="" style="color: white;">Follow</a>
+                                    <?php endif ?>
+                                <?php endif ?>
                                 </div>
                             </div>
 
