@@ -53,7 +53,7 @@ p, li {
 }
 
 #main-container {
-    margin-top: 75px !important;
+    margin-top: 70px !important;
 }
 
 .grey-form {
@@ -162,7 +162,7 @@ body {
 .member-search-img {
     height: 40px;
     width: 40px;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .thinking-box {
@@ -237,6 +237,12 @@ body {
 
     .button-block button span {
         display: none;
+    }
+}
+
+@media only screen and (max-width: 991px) {
+    .mid-box {
+        margin-left: 0px !important;
     }
 }
 
@@ -452,6 +458,39 @@ body {
     text-decoration: none;
 }
 
+.thinking-box, .create-post-box, .post-box {
+    background: white;
+}
+
+.mid-box {
+    background: rgb(240, 242, 245);
+    position: relative;
+}
+
+.left-box {
+    background: rgb(240, 242, 245);
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.films-col-list {
+    margin-top: 80px;
+}
+
+.films-list {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;  
+}
+
+.films-items {
+    height: calc(100vh - 82px);
+    overflow-y: auto;
+}
+
 .chat-col {
     background: rgb(240, 242, 245);
     position: fixed;
@@ -461,7 +500,7 @@ body {
 }
 
 .chat-col-list {
-    margin-top: 75px;
+    margin-top: 80px;
 }
 
 .contact-list {
@@ -472,7 +511,7 @@ body {
 }
 
 .contact-items {
-    height: calc(100vh - 130px);
+    height: calc(100vh - 82px);
     overflow-y: auto;
 }
 
@@ -499,4 +538,122 @@ body {
 
 .contact-group-p {
     font-size: 14px;
+}
+
+.film-box {
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    background: none;
+}
+
+.film-box:hover {
+    background: #e4e6eba9;
+}
+
+.flex-title {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+}
+
+.navbar-dropdown .dropdown-item i {
+    background: rgba(0, 0, 0, 0.1) !important;
+    border-radius: 50%;
+    border: none;
+    font-size: 24px;
+    padding: 5px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+nav .logo{
+    padding: 10px;
+}
+
+nav .logo svg{
+    height: 40px;
+    width: 40px;
+    margin-right: -10px;
+}
+
+.navbar {
+    background: white !important;
+    box-shadow: 0 0 4px rgb(0 0 0 / 20%);
+}
+
+#header-search {
+    background: rgba(0, 0, 0, .05);
+    border: none;
+}
+
+.a-comment, .a-comment:hover {
+    color: black;
+}
+
+.share-content .post-box {
+    box-shadow: none;
+    border: 1px solid rgba(200, 200, 200, .3);
+}
+
+.film-item-a, .film-item-a:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.film-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.global-container {
+    height: 100vh;
+    margin: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    background: #e4e6eba9;
+}
+
+.global-container .row {
+    width: 100%;
+    height: 100%;
+}
+
+.sign-in-col-bg {
+    background: url('../../assets/images/wallsignin.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: right;
+}
+
+.sign-in-form {
+    padding: 30px;
+    border-radius: 5px;
+    background: white;
+    box-shadow: 0 0 4px rgb(0 0 0 / 20%);
+}
+
+.sign-in-logo svg {
+    width: 100px;
+    height: 100px;
+}
+
+.sign-in-form input {
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+}
+
+.sign-in-form .btn {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    font-weight: 500 !important;
+    cursor: pointer;
+    color: white !important;
 }

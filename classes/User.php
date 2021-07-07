@@ -26,7 +26,7 @@ class User {
         if (!empty($info)) {
             $this->username = $info['username'];
             $this->date_created = $info['date_created'];
-            $this->GetProfile();
+            $this->getProfile();
         }
     }
 

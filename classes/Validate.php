@@ -32,19 +32,12 @@ class Validate {
             $errors["password1"] = "Password is invalid.";
         }
 
-        if (!isset($_POST['gender']) || !in_array($_POST['gender'], ['male', 'female'])) {
-            $errors["dob"] = "Gender is invalid.";
+        if (!isset($_POST['dob']) || $_POST['dob'] == null) {
+            $errors["dob"] = "Date of birth is invalid.";
         }
-        
-        if ($checkDuplicate) {
-            //Check for users with same username
-            $query = "SELECT * FROM users WHERE username = ?";
-            $stmt = $conn->prepare($query);
-            $stmt->bind_param("s", $username);
-            $stmt->execute(); 
-            if ($stmt->num_rows > 0) {
-                $errors["execute_err"] = "Username already exists. Try again with a different one.";
-            }
+
+        if (!isset($_POST['gender']) || !in_array($_POST['gender'], ['male', 'female'])) {
+            $errors["gender"] = "Gender is invalid.";
         }
     }
 
@@ -272,7 +265,7 @@ class Validate {
             $fsize = $file['size'];
             $allowed_ext = ['png', 'jpg', 'jpeg', '.bmp', '.PNG', '.JPG', '.JPEG', '.BMP'];
 
-            if ($ftmp == "" && $ferr == 0)
+            if ($ftmp == "" && $ferr == 0 || $ftmp == "" && $ferr == 4)
                 return;
 
             if ($ftmp == "" && $ferr > 0) {

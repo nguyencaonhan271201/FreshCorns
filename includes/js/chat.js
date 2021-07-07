@@ -458,11 +458,16 @@ function handleFormSubmit() {
 }
 
 function sendMessage(message) {
+    let content = message.replace("<br>", "");
+    if (content == "") {
+        content = `<i class="fa fa-heart red chat-heart" aria-hidden="true"></i>`;
+    }
+
     messageRef.child(Date.now()).set({
         "sender_name": `${my_name}`,
         "sender_id": `${my_id}`,
         "sender_image": `${my_image}`,
-        "content": `${message.replace("<br>", "")}`,
+        "content": `${content}`,
         "room": `${roomID}`,
         "timestamp": firebase.database.ServerValue.TIMESTAMP,
         "active": 1

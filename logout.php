@@ -3,8 +3,8 @@
     $_SESSION = [];
     session_destroy();
     if (headers_sent()) {
-        echo "<script>window.location.href = 'index.php';</script>";
+        echo "<script>window.location.href = 'feeds.php';</script>";
     }
     else{
-        header('Location: index.php');
+        header('Location: feeds.php');
     }

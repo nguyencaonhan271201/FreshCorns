@@ -36,7 +36,7 @@ class ThisUser extends User {
             $results = $stmt->get_result();
             //Check
             if ($results->num_rows == 0) {
-                $errors["no_result"] = true;
+                $errors["execute_err"] = "Sign in information is not correct";
             } else {
                 $row = $results->fetch_assoc();
                 //Valid sign in information
@@ -52,10 +52,10 @@ class ThisUser extends User {
                     $_SESSION['user_id'] = $this->id;
                     $_SESSION['profile_img'] = $this->profile->profile_image;
                     if (headers_sent()) {
-                        echo "<script>window.location.href = 'index.php';</script>";
+                        echo "<script>window.location.href = 'feeds.php';</script>";
                     }
                     else{
-                        header("Location: index.php");
+                        header("Location: feeds.php");
                     }
                 }
             }
@@ -76,12 +76,11 @@ class ThisUser extends User {
             if ($stmt->affected_rows == 1) {
                 $this->id = $get_id;
                 $this->retrieveInfo();
-                if (headers_sent()) {
-                    echo "<script>window.location.href = 'index.php';</script>";
-                }
-                else{
-                    header("Location: index.php");
-                }
+                $_SESSION['signed_in'] = true;
+                $_SESSION['username'] = $username;
+                $_SESSION['name'] = $display;
+                $_SESSION['user_id'] = $get_id;
+                $_SESSION['profile_img'] = 'https://firebasestorage.googleapis.com/v0/b/cs204finalproj.appspot.com/o/istockphoto-1223671392-612x612.jpg?alt=media&token=e9312c19-c34e-4a87-9a72-552532766cde';
             } else {
                 $query = "DELETE FROM profiles WHERE ID = ?";
                 $stmt = $this->conn->prepare($query);
@@ -96,6 +95,16 @@ class ThisUser extends User {
 
     public function checkRegisterUser($POST, $FILE, &$errors) {
         Validate::validateProfileInput($POST, $errors, $this->conn, true);
+        
+        //Check for users with same username
+        $query = "SELECT * FROM users WHERE username = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("s", $_POST['username']);
+        $stmt->execute(); 
+        if ($stmt->get_result()->num_rows > 0) {
+            $errors["execute_err"] = "Username already exists. Try again with a different one.";
+        }
+
         //Passed all the tests
         if (empty($errors)) {
             //Everything is good. Register user
@@ -138,10 +147,10 @@ class ThisUser extends User {
             
             if ($stmt->affected_rows != -1 && $stmt->errno == 0) {
                 if (headers_sent()) {
-                    echo "<script>window.location.href = 'index.php'</script>";
+                    echo "<script>window.location.href = 'feeds.php'</script>";
                 }
                 else{
-                    header("Location: index.php");
+                    header("Location: feeds.php");
                 }
             } else {
                 $errors['execute_err'] = true;

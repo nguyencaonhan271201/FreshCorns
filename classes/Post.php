@@ -29,18 +29,20 @@ class Post {
         Validate::validatePost($POST, $FILES, $image, $errors);
 
         if (empty($errors)) {
-            $query = "INSERT INTO posts(user, content, media, mode) VALUES (?, ?, ?, ?)";
+            $query = "INSERT INTO posts(user, content, media, movie_id, movie_type, mode) VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $this->conn->prepare($query);
-            $stmt->bind_param("issi", $this->id, $post_content, $image, $post_mode);
+            $default = 0;
+            $stmt->bind_param("issiii", $this->id, $post_content, $image, $default, $default, $post_mode);
             $stmt->execute();
             if ($stmt->affected_rows == 1) {
                 if (headers_sent()) {
-                    echo "<script>window.location.href = 'index.php';</script>";
+                    echo "<script>window.location.href = 'feeds.php';</script>";
                 }
                 else{
-                    header("Location: index.php");
+                    header("Location: feeds.php");
                 }
             } else {
+                var_dump($stmt);
                 $errors['create-post-execute-err'] = "Server error. Please try again later!";
             } 
         }
@@ -71,10 +73,10 @@ class Post {
             $stmt->execute();
             if ($stmt->affected_rows != -1 && $stmt->errno == 0) {
                 if (headers_sent()) {
-                    echo "<script>window.location.href = 'index.php';</script>";
+                    echo "<script>window.location.href = 'feeds.php';</script>";
                 }
                 else{
-                    header("Location: index.php");
+                    header("Location: feeds.php");
                 }
             } else {
                 $errors['edit-post-execute-err'] = "Server error. Please try again later!";
@@ -96,11 +98,23 @@ class Post {
     }
 
     public function getPosts() {
-        $query = "SELECT p.ID, p.user, p.content, p.media, p.mode, p.share_from, p.date_created, u.display_name, u.profile_image
+        $query = "SELECT p.ID, p.user, p.content, p.media, p.mode, p.share_from, p.date_created, u.display_name, u.profile_image,
+        (SELECT COUNT(*) FROM comments c WHERE c.post = p.ID) AS number_of_comments
         FROM posts p, profiles u WHERE p.user = u.ID ORDER BY p.date_created DESC";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $this->posts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+        for ($i = 0; $i < count($this->posts); $i++) {
+            if ($this->posts[$i]['share_from'] != null) {
+                $query = "SELECT p.ID, p.user, p.content, p.media, p.mode, p.share_from, p.date_created, u.display_name, u.profile_image
+                FROM posts p, profiles u WHERE p.user = u.ID AND p.ID = ?";
+                $stmt = $this->conn->prepare($query);
+                $stmt->bind_param("i", $this->posts[$i]['share_from']);
+                $stmt->execute();
+                $this->posts[$i]['original'] = $stmt->get_result()->fetch_assoc();
+            }
+        }
     }
 
     public function showPosts() {
@@ -180,5 +194,18 @@ class Post {
             <p class='d-none full-content'>{$content}</p>
         </div>";
         }
+    }
+
+    public function sharePost($postID, $mode) {
+        $query = "INSERT INTO posts(user, content, mode, share_from) VALUES (?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($query);
+        $defaultContent = "";
+        $stmt->bind_param("isii", $_SESSION['user_id'], $defaultContent, intval($mode), intval($postID));
+        $stmt->execute();
+        if ($stmt->affected_rows == 1) {
+            echo "true";
+        } else {
+            echo "false";
+        } 
     }
 }

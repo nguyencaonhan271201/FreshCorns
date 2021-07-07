@@ -5,8 +5,12 @@
     include "classes/Validate.php";
     include "classes/User.php";
     include "classes/ThisUser.php";
-    
+
     $site_name = basename($_SERVER['PHP_SELF'], ".php");
+
+    if (!$_SESSION['signed_in'] && $site_name != 'signin' && $site_name != 'index') {
+        header('Location: index.php');
+    }
 
     $db = Database::getInstance();
     $db->initializeDatabaseConnection();
@@ -21,6 +25,8 @@
         $now = time();
 
         $timeDifference = $now - $dt;
+        //Time zone
+        $timeDifference += 3600 * 7;
         $aWeek = 86400 * 7;
 
         if ($timeDifference < 3600)
@@ -40,7 +46,7 @@
         }
         else
         {
-            $getValue = floor($timeDifference / aWeek);
+            $getValue = floor($timeDifference / $aWeek);
             $getUnit = $getValue == 1? "week" : "weeks";
         }
         return "{$getValue} {$getUnit}";
@@ -71,8 +77,11 @@
     </head>
     <body>
         
+    <?php if($site_name != 'index' && $site_name != 'signin'): ?>
     <nav class="navbar navbar-expand-sm navbar-light bg-light">
-        <a class="navbar-brand" href="index.php">Fresh Corns</a>
+        <a class="navbar-brand" href="feeds.php">
+            <span class="logo"><?php echo file_get_contents("assets/images/logo.svg");?></span>
+        </a>
         <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
             aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -84,7 +93,12 @@
                         <div class="col-12 text-right p-0 holder">
                             <input type="text" class="form-control" name="member-search" id="header-search" aria-describedby="helpId" placeholder="Search on Fresh Corns">
                             <div id="header-search-result">
+                                <div id="header-search-user">
+                                    
+                                </div>
+                                <div id="header-search-movies">
 
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -105,18 +119,18 @@
                                 <img class="rounded-circle d-inline-block profile-img" src="<?php echo $_SESSION['profile_img'];?>"> 
                                 <?php echo htmlspecialchars($_SESSION['username']); ?>
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="chat.php">Chat</a>
+                            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="chat.php"><i class="fa fa-comments" aria-hidden="true"></i> Chat</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="edit_profile.php">Edit profile</a>
-                                <a class="dropdown-item" href="change_pass.php">Change Password</a>
+                                <a class="dropdown-item" href="edit_profile.php"><i class="fa fa-user" aria-hidden="true"></i> Edit Profile</a>
+                                <a class="dropdown-item" href="change_pass.php"><i class="fa fa-key" aria-hidden="true"></i> Change Password</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="logout.php"><i class="fa fa-sign-out-alt"></i> Logout</a>
                             </div>
-                        </li>
-                        <li class="nav-item active d-flex align-items-center">
-                            <a class="nav-link" href="logout.php"><i class="fa fa-sign-out-alt"></i> Logout</a>
                         </li>
                     <?php endif;?>
                 </ul>
             <?php endif;?>
         </div>
     </nav>
+    <?php endif; ?>

@@ -1,6 +1,7 @@
 let my_id;
 let my_name;
 let my_image;
+let loadedComments = [];
 
 function sanitize(content) {
     const map = {
@@ -76,6 +77,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
     updateSessionInfo();
 
+    document.querySelectorAll(".btn-comment").forEach(btn => {
+        btn.addEventListener("click", function(e) {
+            e.preventDefault;
+            let getCommentSection = e.target.closest(".post-box").querySelector(".comment-section");
+            if (getCommentSection.classList.contains("d-none"))
+                getCommentSection.classList.remove("d-none");
+        })
+    })
+
+    document.querySelectorAll(".a-comment").forEach(btn => {
+        btn.addEventListener("click", function(e) {
+            e.preventDefault;
+            let getCommentSection = e.target.closest(".post-box").querySelector(".comment-section");
+            if (getCommentSection.classList.contains("d-none"))
+                getCommentSection.classList.remove("d-none");
+        })
+    })
+
+    getTrendingMovies();
+
     loadComments();
 })
 
@@ -118,12 +139,12 @@ document.querySelectorAll(".post-box").forEach(box => {
         } else if (target.classList.contains("btn-like")) {
             e.preventDefault();
             console.log("Like " + postID);
-        } else if (target.classList.contains("btn-comment")) {
+        } else if (target.classList.contains("btn-comment") || target.classList.contains("a-comment")) {
             e.preventDefault();
-            console.log("Comment " + postID);
-        } else if (target.classList.contains("btn-share")) {
+        } else if (target.classList.contains("btn-share") || target.parentNode.classList.contains("btn-share")) {
             e.preventDefault();
-            console.log("Share " + postID);
+            document.querySelector("#shareConfirmationModal").querySelector("#sharePostID").innerHTML = postID; 
+            $("#shareConfirmationModal").modal("show");
         } else if (target.classList.contains("comment-reply")) {
             e.preventDefault();
             let inputBlock = target.parentNode.parentNode.children[2];
@@ -158,7 +179,7 @@ document.querySelectorAll(".post-box").forEach(box => {
             getCommentID = target.closest(".comment").getAttribute("data-id");
             document.querySelector("#commentDeleteModal").querySelector("#deleteCommentID").innerHTML = getCommentID; 
             $("#commentDeleteModal").modal("show");
-        } else if (target.classList.contains("see-more-reply")) {
+        } else if (target.classList.contains("see-more-reply") || target.parentNode.classList.contains("see-more-reply")) {
             e.preventDefault();
             target.parentNode.parentNode.querySelector(".replies-list").classList.remove("d-none");
             target.parentNode.classList.add("d-none");
@@ -170,6 +191,13 @@ document.querySelector("#commentDeleteModal").addEventListener("click", function
     if (e.target.classList.contains("comment-delete-confirm")) {
         e.preventDefault();
         performCommentDeletion(e.target.parentNode.parentNode.querySelector("#deleteCommentID").innerHTML);
+    }
+})
+
+document.querySelector("#shareConfirmationModal").addEventListener("click", function(e) {
+    if (e.target.classList.contains("share-confirm")) {
+        e.preventDefault();
+        sharePost(e.target.parentNode.parentNode.querySelector("#sharePostID").innerHTML, e.target.parentNode.parentNode.querySelector("#share-type").value);
     }
 })
 
@@ -463,18 +491,22 @@ function outputNewComment(result) {
 }
 
 function checkEmojiInput() {
-    $('.reply_inp').emojioneArea({
-        search: false,
-        inline: true,
-        events: {
-                keyup: function (editor, event) {
-                    if (event.which == 13) {
-                        let getID = event.target.parentNode.parentNode.getAttribute("data-id");
-                        handleCommentSubmit(1, event.target);
+    document.querySelectorAll(".reply_inp").forEach(input => {
+        if (input.parentNode.querySelector(".emojionearea") == null) {
+            input.emojioneArea({
+                search: false,
+                inline: true,
+                events: {
+                        keyup: function (editor, event) {
+                            if (event.which == 13) {
+                                let getID = event.target.parentNode.parentNode.getAttribute("data-id");
+                                handleCommentSubmit(1, event.target);
+                            }
+                        }
                     }
-                }
-            }
-        }); 
+            }); 
+        }
+    });
 }
 
 function loadComments() {
@@ -496,6 +528,10 @@ function loadComments() {
 function outputComments(result) {
     result.forEach(comment => {
         let commentID = comment['ID'];
+        if (loadedComments.includes(commentID)) {
+            return;
+        }
+        loadedComments.push(commentID);
         let postID = comment['post'];
         let userID = comment['user'];
         let commentContent = comment['content'];
@@ -618,7 +654,7 @@ function outputComments(result) {
                         </a>
                         <div class="reply-input-div ml-2">
                             <input data-emoji-input='unicode' data-emojiable='true'
-                            type="text" class="form-control reply_inp" name="reply" placeholder="Write reply...">
+                            type="text" class="form-control reply_inp" id="reply_inp_${commentID}" name="reply" placeholder="Write reply...">
                         </div>
                     </div>
                 </div>
@@ -680,16 +716,31 @@ function outputComments(result) {
                         </a>
                         <div class="reply-input-div ml-2">
                             <input data-emoji-input='unicode' data-emojiable='true'
-                            type="text" class="form-control reply_inp" name="reply" placeholder="Write reply...">
+                            type="text" class="form-control reply_inp" id="reply_inp_${commentID}" name="reply" placeholder="Write reply...">
                         </div>
                     </div>
                 </div>
             `;
             parent.appendChild(commentDiv);
         }
+
+        setTimeout(() => {
+            $(`#comment-${commentID} .reply_inp`).emojioneArea({
+                search: false,
+                inline: true,
+                events: {
+                        keyup: function (editor, event) {
+                            if (event.which == 13) {
+                                let getID = event.target.parentNode.parentNode.getAttribute("data-id");
+                                handleCommentSubmit(1, event.target);
+                            }
+                        }
+                    }
+                }); 
+        }, 100)
     })
 
-    checkEmojiInput();
+    //checkEmojiInput();
     document.querySelectorAll(".comment").forEach((commentDiv) => {
         let numberOfReplies = commentDiv.querySelectorAll(".replies-list .comment").length;
         if (numberOfReplies > 0) {
@@ -759,6 +810,24 @@ function editCommentExecute(commentID) {
         placeholder="Write...">${commentOriginalContent.trim()}</textarea>
         <p>Press Esc to <a class="blue-a" href="">cancel</a>.</p>
     `;
+    
+    document.activeElement.blur();
+    commentBox.focus();
+
+    let getMentionHTML = "";
+    let getMentionName = "";
+
+    if (commentOriginalContent.trim().indexOf(`<a href="profile.php?id=`) != -1) {
+        getMentionHTML = commentOriginalContent.trim().substring(0, commentOriginalContent.trim().indexOf(`</a>`) + 4);
+        getMentionName = getMentionHTML.substring(getMentionHTML.indexOf(`>`) + 1, commentOriginalContent.trim().indexOf(`</a>`));
+        getMentionHTMLEdit = getMentionHTML.replace("mention-a-display", "mention-a");
+        commentBox.innerHTML = `
+        <textarea data-emoji-input='unicode' data-emojiable='true'
+        type="text" class="form-control" name="comment_edit_content" id="comment_edit_content" data-id="commentID"
+        placeholder="Write...">${commentOriginalContent.trim().replace(getMentionHTML, getMentionHTMLEdit)}</textarea>
+        <p>Press Esc to <a class="blue-a" href="">cancel</a>.</p>
+        `;
+    }
 
     let commentButtonBlock = getCommentWrapper.querySelector(".comment-btn-block");
     let commentButtonBlockHTML = commentButtonBlock.outerHTML;
@@ -783,6 +852,7 @@ function editCommentExecute(commentID) {
                     //Get real content to store in DB
                     element.querySelectorAll("div").forEach(element => element.remove());
                     let getInnerHTML = element.innerHTML;
+
                     while (getInnerHTML.indexOf("<img") != -1) {
                         let getStartIndex = getInnerHTML.indexOf("<img");
                         let getSubstring = getInnerHTML.substring(getStartIndex, getInnerHTML.length);
@@ -793,6 +863,11 @@ function editCommentExecute(commentID) {
                     }
 
                     let newContent = getInnerHTML.replace(/&nbsp;/g, " ");
+
+                    //Check for mentioning
+                    if (getMentionHTML != "" && newContent.indexOf(getMentionName) == 0) {
+                        newContent = newContent.replace(getMentionName, getMentionHTML).trim();
+                    }
 
                     if (newContent == "") {
                         //Ask for deletion
@@ -834,6 +909,10 @@ function editCommentExecute(commentID) {
         }
     });
 
+    document.querySelectorAll(".comment .emojionearea-editor").forEach(comment => {
+        comment.innerHTML = comment.innerHTML.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+    })
+
     commentBox.querySelector(".blue-a").addEventListener("click", function(e) {
         e.preventDefault();
         commentBox.outerHTML = commentBoxHTML;
@@ -862,3 +941,105 @@ function performCommentDeletion(commentID) {
     xhr.send(`comment_delete&comment=${commentID}`);
     $("#commentDeleteModal").modal("hide");
 }
+
+function sharePost(postID, mode) {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "././includes/php/mainRequestHandler.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function() {
+        if(this.status == 200 && this.readyState == 4) {
+            let message = this.responseText;
+            if (message != "true") {
+                $("#errorBox").modal("show");
+            } else {
+                location.reload();
+            }
+        }
+    }
+    xhr.send(`post_share&postID=${postID}&mode=${mode}`);
+    $("#shareConfirmationModal").modal("hide");
+}
+
+let movies = [];
+let TVs = [];
+function getTrendingMovies() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "././includes/php/mainRequestHandler.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function() {
+        if(this.status == 200 && this.readyState == 4) {
+            IDs = JSON.parse(this.responseText);
+            let getCompleted = 0;
+            for (let i = 0; i < IDs.length; i++) {
+                let getID = IDs[i]['movie_id'];
+                let getType = IDs[i]['movie_type'];
+                if (getType == 0) {
+                    theMovieDb.tv.getById({"id": getID}, data => {
+                        TVs.push(JSON.parse(data));
+                        getCompleted++;
+                        if (getCompleted == IDs.length) {
+                            loadTrendingMoviesToDOM();
+                        }
+                    }, data => {});
+                } else {
+                    theMovieDb.movies.getById({"id": getID}, data => {
+                        movies.push(JSON.parse(data));
+                        getCompleted++;
+                        if (getCompleted == IDs.length) {
+                            loadTrendingMoviesToDOM();
+                        }
+                    }, data => {});
+                }
+                
+            }
+        }
+    }
+    xhr.send(`trending_movies`);
+}
+
+function loadTrendingMoviesToDOM() {
+    let movieBlock = document.querySelector(".films-items .films");
+    let TVBlock = document.querySelector(".films-items .TVs");
+    for (let i = 0; i < movies.length; i++) {
+        filmTitle = movies[i]['title'];
+        filmID = movies[i]['id'];
+        filmPoster = movies[i]['poster_path'] != null? 'https://image.tmdb.org/t/p/original' + movies[i]['poster_path'] : "https://firebasestorage.googleapis.com/v0/b/cs204finalproj.appspot.com/o/866069.png?alt=media&token=fe8a87b5-c062-496d-a7d2-60ad9559fcb3";
+        movieBlock.innerHTML += `
+            <a href="movie.php?id=${filmID}&type=1" class="film-item-a">
+                <div class="film-box d-flex flex-row">
+                    <img class="d-inline-block film-img" src="${filmPoster}">
+                    <div class="ml-2 flex-title">
+                        <h6 class="m-0">${filmTitle}</h6>
+                    </div>
+                </div>
+            </a>
+        `
+    }
+    for (let i = 0; i < TVs.length; i++) {
+        filmTitle = TVs[i]['name'];
+        filmID = TVs[i]['id'];
+        filmPoster = movies[i]['poster_path'] != null? 'https://image.tmdb.org/t/p/original' + movies[i]['poster_path'] : "https://firebasestorage.googleapis.com/v0/b/cs204finalproj.appspot.com/o/866069.png?alt=media&token=fe8a87b5-c062-496d-a7d2-60ad9559fcb3";
+        TVBlock.innerHTML += `
+            <a href="movie.php?id=${filmID}&type=0" class="film-item-a">
+                <div class="film-box d-flex flex-row">
+                    <img class="d-inline-block film-img" src="${filmPoster}">
+                    <div class="ml-2 flex-title">
+                        <h6 class="m-0">${filmTitle}</h6>
+                    </div>
+                </div>
+            </a>
+        `
+    }
+}
+
+function loadMoviesInfo() {
+    return new Promise((resolve, reject) => {
+        for (let i = 0; i < movies.length; i++) {
+            let getID = movies[i]['movie_id'];
+            theMovieDb.movies.getById({"id": getID}, data => {
+                movies[i]['info'] = JSON.parse(data);
+            }, data => {});
+        }
+    });
+}
+

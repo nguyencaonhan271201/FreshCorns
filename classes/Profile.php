@@ -97,10 +97,10 @@ class Profile {
                     $_SESSION['name'] = $display;
                     $_SESSION['profile_img'] = $profile_image;
                     if (headers_sent()) {
-                        echo "<script>window.location.href = 'index.php'</script>";
+                        echo "<script>window.location.href = 'feeds.php'</script>";
                     }
                     else{
-                        header("Location: index.php");
+                        header("Location: feeds.php");
                     }
                 }
             }

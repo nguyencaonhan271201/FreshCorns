@@ -8,7 +8,7 @@
     $post_image = "";
 ?>
 
-<form method="post" action="index.php" class="post-form" enctype="multipart/form-data">
+<form method="post" action="feeds.php" class="post-form" enctype="multipart/form-data">
     <h4 class="text-center">Create a post</h4>
     <hr>
     <input type="hidden" name="csrf" value="<?php echo $csrf_token; ?>">

@@ -1,5 +1,10 @@
 <?php
 include('db.php');
+include('../../classes/Post.php');
+include('../../classes/Movies.php');
+include('../../classes/User.php');
+include('../../classes/Validate.php');
+include('../../classes/ThisUser.php');
 session_start();
 
 if (isset($_POST['header_search'])) {
@@ -21,4 +26,19 @@ if (isset($_POST['header_search'])) {
     });
 
     echo json_encode($results);
+} elseif (isset($_POST['post_share'])) {
+    $postID = $_POST['postID'];
+    $mode = $_POST['mode'];
+    $post = new Post($conn);
+    $post->sharePost($postID, $mode);
+} elseif (isset($_POST['trending_movies'])) {
+    echo json_encode(Movies::getTrendingMovies($conn));
+} elseif (isset($_POST['create_account'])) {
+    if ($_POST['csrf'] == $_SESSION['csrf_token']) {
+        $errors = [];
+        $this_user = ThisUser::getInstance();
+        $this_user->setConn($conn);
+        $this_user->CheckRegisterUser($_POST, $_FILES, $errors);
+        echo json_encode($errors);
+    } 
 }

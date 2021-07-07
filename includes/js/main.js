@@ -1,4 +1,5 @@
 let prevScrollpos = window.pageYOffset;
+let moviesSearch = [];
 window.onscroll = function() {
     // let currentScrollPos = window.pageYOffset;
     // if (prevScrollpos > currentScrollPos) {
@@ -12,14 +13,22 @@ window.onscroll = function() {
 //Handle header search
 let headerSearchInput = document.querySelector("#header-search");
 let headerSearchResultZone = document.querySelector("#header-search-result")
+let headerSearchUserZone = document.querySelector("#header-search-user")
+let headerSearchMoviesZone = document.querySelector("#header-search-movies")
 
 function ajaxHeaderSearch(query) {
+    moviesSearch = [];
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "././includes/php/mainRequestHandler.php", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.onload = function() {
         if(this.status == 200 && this.readyState == 4) {
             outputHeaderSearchResult(JSON.parse(this.responseText));
+            theMovieDb.search.getMulti({"query" : query},
+            data => {
+                moviesSearch = JSON.parse(data)['results'];
+                outputHeaderSearchMovies(query);
+            }, data => {});
         }
     }
     xhr.send(`header_search=true&q=${query}`);
@@ -31,7 +40,8 @@ headerSearchInput.addEventListener("keyup", function(e) {
     if (input != "") {
         ajaxHeaderSearch(input);
     } else {
-        headerSearchResultZone.innerHTML = "";
+        headerSearchUserZone.innerHTML = "";
+        headerSearchMoviesZone.innerHTML = "";
     }
 })
 
@@ -44,7 +54,10 @@ headerSearchInput.addEventListener("focus", function(e) {
 })
 
 function outputHeaderSearchResult(results) {
-    headerSearchResultZone.innerHTML = "";
+    headerSearchUserZone.innerHTML = `
+        <h6 class="ml-2 text-left mt-1">People</h6>
+        <hr class="m-0">
+    `;
     results.forEach(result => {
         let html = `<a href="profile.php?id=${result.ID}">
         <div class="member search-result d-flex flex-row justify-content-start align-items-center" data-id=${result.ID}>
@@ -56,6 +69,37 @@ function outputHeaderSearchResult(results) {
             </div>
         </div>
         </a>`;
-        headerSearchResultZone.innerHTML += html;
+        headerSearchUserZone.innerHTML += html;
+    })
+
+    headerSearchUserZone.innerHTML += `
+        <h6 class="ml-2 text-left mt-1">Movies & Series</h6>
+        <hr class="m-0">
+    `;
+}
+
+function outputHeaderSearchMovies(query) {
+    headerSearchMoviesZone.innerHTML = "";
+    console.log(moviesSearch);
+    moviesSearch.forEach(result => {
+        if (result['media_type'] == 'tv' || result['media_type'] == 'movie') {
+            let getHref = `movie.php?id=${result['id']}&type=${result['media_type'] == 'tv'? 0 : 1}`;
+            let filmTitle = result['media_type'] == 'tv'? result['name'] : result['title'];
+            let filmPoster = result['poster_path'] != null? 'https://image.tmdb.org/t/p/w185' + result['poster_path'] : "https://firebasestorage.googleapis.com/v0/b/cs204finalproj.appspot.com/o/866069.png?alt=media&token=fe8a87b5-c062-496d-a7d2-60ad9559fcb3";
+            console.log(filmTitle);
+            if ((result['media_type'] != 'tv' && result['media_type'] != 'movie') || filmTitle.toLowerCase().indexOf(query.toLowerCase()) != -1) {
+                let html = `<a href="${getHref}">
+                <div class="member search-result d-flex flex-row justify-content-start align-items-center" data-id=${result.ID}>
+                    <img class="member-search-img rounded-circle mr-2 ml-2" src="${filmPoster}">
+                    <div class="ml-2 d-flex flex-column align-items-center justify-content-start">
+                        <div class="text-left">
+                            <p class="mt-1 mb-0" id="search-display-name">${filmTitle}</p>
+                        </div>
+                    </div>
+                </div>
+                </a>`;
+                headerSearchMoviesZone.innerHTML += html;
+            }
+        }
     })
 }
