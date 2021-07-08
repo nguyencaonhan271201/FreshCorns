@@ -1,0 +1,128 @@
+img{
+    width: 100%;
+    border-radius: 20px;
+}
+
+h2{
+    font-size: small;
+}
+
+#postMvVl{
+    min-width: 100px;
+}
+
+.postCap{
+    width: 100%;
+    background-color: transparent;
+}
+
+.postDiv input[type="file"], .cardInfos input[type="file"]{
+    display:none;
+}
+
+.postForm{
+    position: relative;
+}
+
+.postForm h2{
+    white-space: nowrap;
+}
+
+.postForm .selectize-input{
+    background-color: #F8F9FA;
+}
+
+.postForm button{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: white;
+    background-color: #0082FF;
+    border-radius: 20px;
+    border: none;
+}
+
+.feedCard{
+    position: relative;
+    height: fit-content;
+    min-height: 100px;
+    border-radius: 20px;   
+    /* overflow: hidden; */
+    margin: 20px 0;
+}
+
+.cardInfos{    
+    padding-top: 10px!important;
+}
+
+.limited_text{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 35ch;
+}
+
+.feedCard .cardUserImg, .postUserImg{
+    position: relative;
+    width: 100px!important;
+    height: 100%;
+}
+
+.cardUserImg img, .postUserImg img{   
+    position: absolute; 
+    top: 0;
+    right: 0;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    padding: 10px 20px;
+}
+
+.cardMedia, .postFile_preview_div{
+    position: relative;
+}
+
+.cardMedia img, .postFile_preview_div img{
+    margin: 20px 0;
+} 
+
+.cardMedia img[src*=""], .postFile_preview_div img[src*=""]{
+    margin: 0!important;
+}
+
+.delMediaBtn{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 15px 8px;
+    height: fit-content;    
+    background-color: rgb(0, 0, 0, 0.3)!important;
+    color: white;
+    border: none;
+    border-radius: 50%;
+}
+
+.editMedia{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 15px;
+}
+
+.editMedia i{    
+    color: white;
+    margin: 2px;
+}
+
+.cardChin{
+    height: 50px;
+    padding-top: 10px;
+    background-color: #0082FF;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.cardChin i{
+    color: white;
+}
+
