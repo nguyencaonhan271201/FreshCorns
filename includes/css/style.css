@@ -62,11 +62,23 @@ footer * {
     top: -1px;
     right: 0;
     left: 0;    
-    transition: top 300ms;
+    transition: top 300ms, background-color 1s;
     z-index: 30;
-    background: white !important;
     box-shadow: 0 0 4px rgb(0 0 0 / 20%);
 }
+
+.navbar .logo{
+    transition: fill 1s;
+}
+
+.nav-link {
+    transition: color 1s;
+}
+
+body {
+    transition: background-color 1s !important;
+}
+
 .profile-img {
     width: 40px;
     height: 40px;
@@ -421,8 +433,8 @@ body {
     text-decoration: none;
 }
 
-.thinking-box, .create-post-box, .post-box {
-}
+/*.thinking-box, .create-post-box, .post-box {
+}*/
 
 .mid-box {
     position: relative;
@@ -510,6 +522,12 @@ body {
     color: black;
 }
 
+.share-content{
+    border-top: #65676B solid 1px;
+    border-left: #65676B solid 1px;
+    border-top-left-radius: 20px;
+    margin: 10px;
+}
 .share-content .post-box {
     box-shadow: none;
     border: 1px solid rgba(200, 200, 200, .3);
@@ -674,4 +692,37 @@ body {
 
 .edit-info {
     cursor: pointer;
+}
+
+.h1-logo svg {
+    width: 75px;
+    height: 75px;
+}
+
+.fade-in {
+    animation: fadeInAnimation ease 300ms forwards;
+    animation-iteration-count: 1;
+}
+
+.fade-out {
+    animation: fadeOutAnimation ease 300ms forwards;
+    animation-iteration-count: 1;
+}
+
+@keyframes fadeOutAnimation {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }

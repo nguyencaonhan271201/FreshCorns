@@ -1,4 +1,5 @@
 let selectizeControl;
+let checkSinglePostPage = window.location.pathname.indexOf('single_post') != -1;
 
 $(document).ready(function(){
   selectizeControl = selectizeSelect($('.postMvVl'));
@@ -179,7 +180,7 @@ function printPosts(div,results){
           html = `
           <div class="feedCard container-fluid p-0" id="${result['ID']}">
             <div class="d-flex pr-3">
-              <a href="profile.php?id=${result['user']}" class="cardUserImg">
+              <a href="profile.php?id=${result['user']}" class="cardUserImg flex-fill">
                   <img src="${result['profile_image']}">
               </a>
 
@@ -198,7 +199,7 @@ function printPosts(div,results){
                       id="${result['mode']}">${mode_text}</span>
                   </h2>
 
-                  <p class="limited_text">${result['content']}</p>   
+                  <p class="limited_text cardCap">${result['content']}</p>   
                   
                   <div class="cardMedia">    
                     <img src="${(result['media'])?result['media']:''}" class="media">
@@ -212,7 +213,7 @@ function printPosts(div,results){
                   <i class="cardReact far fa-thumbs-up" id="${result['ID']}"></i>
                 </div>
                 <div class="col text-center">
-                  <i class="cardComment bi bi-chat-text" id="${result['ID']}"></i>
+                  <i class="cardComment bi bi-chat-text" id="${result['ID']}"> <span style="font-style: normal !important;">${result['number_of_comments']}</span></i>
                 </div>
             `;
             if (my_id == result['user']) html+=`
@@ -251,7 +252,7 @@ function printPosts(div,results){
                       id="${result['mode']}">${mode_text}</span>
                   </h2>
 
-                  <div class="share-content">
+                  <div class="share-content" data-id="${result['original']['ID']}">
                     <div class="feedCard container-fluid p-0">
                       <div class="d-flex pr-3">
                         <a href="profile.php?id=${result['original']['user']}" class="cardUserImg">
@@ -266,14 +267,14 @@ function printPosts(div,results){
                               JSON.stringify({
                                 movie_id:result['original']['movie_id'],
                                 movie_type:result['original']['movie_type']
-                              })}' href="movie.php?id=${result['movie_id']}&type=${result['movie_type']}"></a> 
+                              })}' href="movie.php?id=${result['original']['movie_id']}&type=${result['original']['movie_type']}"></a> 
                               • <a class="cardDate" data-tooltip="${new Date(result['original']['date_created']).addHours(7).toLocaleString()}" data-tooltip-location="bottom"
                                 href="single_post.php?id=${result['original']['ID']}">${getDuration(new Date(result['original']['date_created']))}</a>
                               • <span class="cardMode" data-tooltip-location="bottom" data-tooltip="${result['original']['mode'] == 1? "Public" : result['original']['mode'] == 2? "Followers" : "Private"}"
                                 id="${result['original']['mode']}">${share_mode_text}</span>
                             </h2>
 
-                            <p class="limited_text">${result['original']['content']}</p>   
+                            <p class="limited_text cardCap">${result['original']['content']}</p>   
                             
                             <div class="cardMedia">    
                               <img src="${(result['original']['media'])?result['original']['media']:''}" class="media">
@@ -293,7 +294,7 @@ function printPosts(div,results){
                   </div>
                 </div>
                 <div class="col text-center">              
-                  <i class="cardComment bi bi-chat-text" id="${result['ID']}"></i>
+                  <i class="cardComment bi bi-chat-text" id="${result['ID']}"> <span style="font-style: normal !important;">${result['number_of_comments']}</span></i>
                 </div>
             `;
             html+=`
@@ -321,7 +322,7 @@ function printPosts(div,results){
     });
     div.find(".cardComment").click(function(){
       let id = $(this).attr('id');
-      window.location.href = `single_post.php?id=${id}`;
+      window.location.href = `single_post.php?id=${id}&comment_scroll`;
     });  
     document.querySelectorAll(".feedCard").forEach(box => {
       box.addEventListener("click", function(e) {
@@ -344,6 +345,9 @@ function printPosts(div,results){
               e.preventDefault();
             } else if (target.classList.contains("see-more-reply") || target.parentNode.classList.contains("see-more-reply")) {
               e.preventDefault();
+            } else if (!checkSinglePostPage && postID != "") {
+              console.log(postID);
+              window.location = `single_post.php?id=${postID}`;
             }
           }
       })
@@ -364,7 +368,7 @@ function EditPost(object){
 
   let parent = $(`.feedCard#${id}`);
 
-  let p = parent.find('p');
+  let p = parent.find('p.cardCap');
 
   let movie_title = parent.find('.movie_title');
   let backup_header_h2 = parent.find('.cardInfos h2').html();

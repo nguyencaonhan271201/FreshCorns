@@ -2,6 +2,14 @@ let my_id;
 let my_name;
 let my_image;
 let absolute_path;
+let colorThief = new ColorThief();
+
+let indexIsSignedIn = true;
+
+let preFix = "/FreshCorns-Tan/merge_test%204"
+let isIndexPage = (window.location.pathname == preFix + '/' 
+|| window.location.pathname == preFix + '/index' || window.location.pathname == preFix + '/index.php');
+
 
 //let prevScrollpos = window.pageYOffset;
 let moviesSearch = [];
@@ -59,23 +67,27 @@ headerSearchInput.addEventListener("focus", function(e) {
 })
 
 function outputHeaderSearchResult(results) {
-    headerSearchUserZone.innerHTML = `
+    if (!isIndexPage && indexIsSignedIn) {
+        headerSearchUserZone.innerHTML = `
         <h6 class="ml-2 text-left mt-1">People</h6>
         <hr class="m-0">
-    `;
-    results.forEach(result => {
-        let html = `<a href="profile.php?id=${result.ID}">
-        <div class="member search-result d-flex flex-row justify-content-start align-items-center" data-id=${result.ID}>
-            <img class="member-search-img rounded-circle mr-2 ml-2" src="${result.profile_image}">
-            <div class="ml-2 d-flex flex-column align-items-center justify-content-start">
-                <div class="text-left">
-                    <p class="mt-1 mb-0" id="search-display-name">${result.display_name}</p>
+        `;
+        results.forEach(result => {
+            let html = `<a href="profile.php?id=${result.ID}">
+            <div class="member search-result d-flex flex-row justify-content-start align-items-center" data-id=${result.ID}>
+                <img class="member-search-img rounded-circle mr-2 ml-2" src="${result.profile_image}">
+                <div class="ml-2 d-flex flex-column align-items-center justify-content-start">
+                    <div class="text-left">
+                        <p class="mt-1 mb-0" id="search-display-name">${result.display_name}</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        </a>`;
-        headerSearchUserZone.innerHTML += html;
-    })
+            </a>`;
+            headerSearchUserZone.innerHTML += html;
+        })
+    } else {
+        headerSearchUserZone.innerHTML = "";
+    }
 
     headerSearchUserZone.innerHTML += `
         <h6 class="ml-2 text-left mt-1">Movies & Series</h6>
@@ -115,6 +127,10 @@ $(document).ready(function(){
     updateSessionInfo();
 })
 
+function isFunction(fn){
+    return typeof fn === 'function'
+}
+
 function updateSessionInfo() {
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "././includes/php/sessionInfoRequestHandler.php", true);
@@ -125,9 +141,7 @@ function updateSessionInfo() {
             my_id = result['user_id'];
             my_name = result['name'];
             my_image = result['profile_img'];
-            if (loadPosts != null) {
-                loadPosts();
-            }
+            loadPosts();
         }
     }
     xhr.send(`page=chat`);

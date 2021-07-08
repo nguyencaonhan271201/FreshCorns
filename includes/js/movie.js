@@ -2,7 +2,7 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const movie_id = urlParams.get('id');
 const movie_type = urlParams.get('type');
-const colorThief = new ColorThief();
+let movieIsSignedIn = false;
 
 if (movie_type==1){
     theMovieDb.movies.getById({"id":movie_id}, data => {
@@ -28,7 +28,22 @@ if (movie_type==1){
 
 function printMovieDatas(result,palette,type){
     console.log(result);
-    //console.log(palette);    
+    //console.log(palette);   
+    $('.navbar').removeClass('bg-light');
+    $('.navbar').css("background-color",`rgb(${palette[1][0]},${palette[1][1]},${palette[1][2]})`);
+    $('.navbar .logo').css("fill",`rgb(${palette[0][0]},${palette[0][1]},${palette[0][2]})`)
+    $('.navbar-toggler').attr("style",function(i,s) { 
+        return (s || '') + `border-color: rgb(${palette[0][0]},${palette[0][1]},${palette[0][2]})!important`;
+    });
+    $('.navbar-toggler-icon').attr("style",function(i,s) { 
+        return (s || '') + `background-image: 
+            url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(${palette[0][0]},${palette[0][1]},${palette[0][2]}, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E")
+            !important;
+            }`;
+    });
+    $('.nav-link.dropdown-toggle').attr("style",function(i,s) { 
+        return (s || '') + `color: rgb(${palette[0][0]},${palette[0][1]},${palette[0][2]})!important;`;
+    });
 
     if (type==1){
         $('h1#year').text(new Date(result['release_date']).getFullYear()).css("color",`rgb(${palette[1][0]},${palette[1][1]},${palette[1][2]})`).css("background-color",`rgb(${palette[0][0]},${palette[0][1]},${palette[0][2]})`);
@@ -45,7 +60,9 @@ function printMovieDatas(result,palette,type){
 
     $('body').css("background-image",'url("'+theMovieDb.common.images_uri+'original'+result['backdrop_path']+'")');
 
-    loadPosts_movie(palette);
+    if (movieIsSignedIn) {
+        loadPosts_movie(palette);
+    }
 }
 
 function loadPosts_movie(palette){

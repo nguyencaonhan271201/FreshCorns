@@ -37,3 +37,11 @@
     <script type="text/javascript" src="includes/js/themoviedb.js" charset="utf-8"></script>
     <script type="text/javascript" src="includes/js/movie.js" charset="utf-8"></script>
 </html>
+
+<?php 
+    if ($_SESSION['signed_in']) {
+        echo "<script> movieIsSignedIn = true; indexIsSignedIn = true; </script>";
+    } else {
+        echo "<script> movieIsSignedIn = false; indexIsSignedIn = false; </script>";
+    }
+?>

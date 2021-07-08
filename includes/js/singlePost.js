@@ -88,7 +88,7 @@ Date.prototype.addHours= function(h){
 }
 
 function outputComments(result) {
-    result.forEach(comment => {
+    result.forEach((comment, index) => {
         let commentID = comment['ID'];
         if (loadedComments.includes(commentID)) {
             return;
@@ -301,6 +301,15 @@ function outputComments(result) {
                     }
                 }); 
         }, 100)
+
+        if (index == result.length - 1) {
+            let urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has("comment_scroll")) {
+                setTimeout(function() {
+                    document.querySelector(".comment-section").scrollIntoView();
+                }, 100);
+            }
+        }
     })
 
     document.querySelectorAll(".comment").forEach((commentDiv) => {

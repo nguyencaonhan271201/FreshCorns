@@ -270,7 +270,7 @@ class Post {
 
     public static function getAllPostsPublic($conn, $user_id){
       $posts = getRows($conn,
-        "select p.*, pf.display_name,pf.profile_image
+        "select p.*, (SELECT COUNT(*) FROM comments c WHERE c.post = p.ID) AS number_of_comments, pf.display_name,pf.profile_image
         from posts p, profiles pf
         where p.user = pf.ID and p.mode = 1 AND p.share_from IS NULL
         OR EXISTS (SELECT * FROM relationships r WHERE r.user2 = (SELECT user FROM posts WHERE ID = p.share_from) AND r.user1 = ?)
@@ -293,7 +293,7 @@ class Post {
 
     public static function getAllPostsFollowing($conn,$user_id){
       $posts = getRows($conn,
-        "SELECT DISTINCT p.*, pf.display_name, pf.profile_image
+        "SELECT DISTINCT p.*, (SELECT COUNT(*) FROM comments c WHERE c.post = p.ID) AS number_of_comments, pf.display_name, pf.profile_image
         FROM posts p JOIN profiles pf
         ON p.user = pf.ID WHERE p.ID IN (SELECT ID FROM posts WHERE user = ? AND (mode = 2 OR mode = 3))
         OR p.ID IN
@@ -331,7 +331,7 @@ class Post {
     public function getSinglePost($id){
       $this->post_id = $id;
       $this->post = getRows($this->conn,
-      "select p.*,pf.display_name,pf.profile_image
+      "select p.*, (SELECT COUNT(*) FROM comments c WHERE c.post = p.ID) AS number_of_comments, pf.display_name,pf.profile_image
       from posts p, profiles pf
       where p.user = pf.ID and p.ID=?","i",array($this->post_id));
 

@@ -64,7 +64,7 @@ h2{
 
 .feedCard .cardUserImg, .postUserImg{
     position: relative;
-    width: 100px;
+    width: 100px!important;
     height: 100%;
 }
 

@@ -164,9 +164,9 @@
     //     document.querySelector('footer').classList.add('fixed-bottom');
     // </script>";
 
-    if (isset($_POST['submit'])) {
-        // echo "<script>
-        //     formAnimationCheck();
-        // </script>";
+    if (isset($_GET['signup'])) {
+        echo "<script>
+            $('#registerBox').modal('show');
+        </script>";
     }
 ?>

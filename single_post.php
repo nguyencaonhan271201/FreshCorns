@@ -71,7 +71,7 @@
                                 </h2>
                             </div>
 
-                            <p><?php echo htmlspecialchars($post->post['content'])?></p>      
+                            <p class="cardCap"><?php echo htmlspecialchars($post->post['content'])?></p>      
 
                             <div class="cardMedia">  
                                 <img src="<?php echo htmlspecialchars($post->post['media'])?>" onerror="this.style.display='none'">
@@ -83,11 +83,11 @@
                         <div class="row">
                             <div class="col text-center">
                                 <div clas="d-flex">       
-                                    <i class="cardReact far fa-thumbs-up" id="<?php echo htmlspecialchars($post->post['ID'])?>">100</i>
+                                    <i class="cardReact far fa-thumbs-up" id="<?php echo htmlspecialchars($post->post['ID'])?>"> </i>
                                 </div>
                             </div>
                             <div class="col text-center">       
-                                <i class="cardComment bi bi-chat-text"></i>
+                                <i class="cardComment bi bi-chat-text"> <span style="font-style: normal !important;"><?php echo htmlspecialchars($post->post['number_of_comments'])?></span></i>
                             </div>
                             <?php if($post->post['user'] == $_SESSION['user_id']):?>                            
                             <div class="col text-center">
@@ -140,7 +140,7 @@
                             </div>   
                         </div>
 
-                        <div class="share-content">
+                        <div class="share-content" data-id="<?php echo $post->post['original']['ID'];?>">
                             <div class="feedCard container-fluid p-0">
                                 <div class="d-flex pr-3">
                                     <a href="profile.php?id=<?php echo $post->post['original']['user'];?>" class="cardUserImg">
@@ -167,9 +167,11 @@
                                             </h2>
                                         </div>
 
-                                        <p><?php echo htmlspecialchars($post->post['original']['content'])?></p>      
+                                        <p clas="cardCap"><?php echo htmlspecialchars($post->post['original']['content'])?></p>      
                                         
-                                        <img src="<?php echo htmlspecialchars($post->post['original']['media'])?>" onerror="this.style.display='none'">
+                                        <div class="cardMedia">  
+                                            <img src="<?php echo htmlspecialchars($post->post['media'])?>" onerror="this.style.display='none'">
+                                        </div>
                                     </div>
                                 </div>   
                             </div>
@@ -180,11 +182,11 @@
                         <div class="row">
                             <div class="col text-center">
                                 <div clas="d-flex">       
-                                    <i class="cardReact far fa-thumbs-up" id="<?php echo htmlspecialchars($post->post['ID'])?>">100</i>
+                                    <i class="cardReact far fa-thumbs-up" id="<?php echo htmlspecialchars($post->post['ID'])?>"> </i>
                                 </div>
                             </div>
                             <div class="col text-center">  
-                                <i class="cardComment bi bi-chat-text"></i>
+                                <i class="cardComment bi bi-chat-text"> <span style="font-style: normal !important;"><?php echo htmlspecialchars($post->post['number_of_comments'])?></span></i>
                             </div>
                             <?php if($post->post['user'] == $_SESSION['user_id']):?>                            
                             <div class="col text-center">

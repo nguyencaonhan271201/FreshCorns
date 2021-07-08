@@ -9,7 +9,7 @@
 
     $site_name = basename($_SERVER['PHP_SELF'], ".php");
 
-    if (!$_SESSION['signed_in'] && $site_name != 'signin' && $site_name != 'index') {
+    if (!$_SESSION['signed_in'] && $site_name != 'signin' && $site_name != 'index' && $site_name != 'movie') {
         header('Location: index.php');
     }
 
@@ -62,6 +62,7 @@
 <html lang="en">
     <head>
         <title>Fresh Corns | <?php echo $header_tags[$site_name];?></title>
+        <link rel="icon" href="assets/icons/logo-white.svg">
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -69,6 +70,7 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
         <!-- Additional CSS -->
         <link rel="stylesheet" href="includes/css/style.css">
@@ -79,10 +81,12 @@
         <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <?php endif; ?>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.min.js" integrity="sha512-mMe7BAZPOkGbq+zhRBMNV3Q+5ZDzcUEOJoUYXbHpEcODkDBYbttaW7P108jX66AQgwgsAjvlP4Ayb/XLJZfmsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     </head>
     <body>
         
-    <?php if($site_name != 'index' && $site_name != 'signin'): ?>
+    <?php if(/*$site_name != 'index' &&*/ $site_name != 'signin'): ?>
     <nav class="navbar navbar-expand-sm navbar-light bg-light">
         <a class="navbar-brand" href="feeds.php">
             <span class="logo"><?php echo file_get_contents("assets/images/logo.svg");?></span>
@@ -116,7 +120,7 @@
                             <a class="nav-link sign-in" href="signin.php"><i class="fa fa-sign-in-alt" aria-hidden="true"></i> Sign in</a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link join-us" href="signup.php"><i class="fa fa-user-plus" aria-hidden="true"></i> Join us</a>
+                            <a class="nav-link join-us" href="signin.php?signup"><i class="fa fa-user-plus" aria-hidden="true"></i> Join us</a>
                         </li>
                     <?php elseif($_SESSION['signed_in']): ?>
                         <li class="nav-item active dropdown">

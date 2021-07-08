@@ -105,7 +105,7 @@
                             }
                         ?>
                         <?php if(count($single_rooms) > 0): ?>
-                            <h6 class="ml-2">Contacts</h6>
+                            <h1 class="ml-2">Contacts</h1>
                             <hr class="m-0">
                             <?php foreach($single_rooms as $chat_room): ?>
                             <?php 
@@ -134,7 +134,7 @@
                             <?php endforeach; ?>
                         <?php endif; ?>
                         <?php if(count($groups) > 0): ?>
-                            <h6 class="ml-2 mt-2">Groups</h6>
+                            <h1 class="ml-2 mt-2">Groups</h1>
                             <hr class="m-0">
                             <?php foreach($groups as $chat_room): ?>
                             <?php 

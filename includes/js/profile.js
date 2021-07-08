@@ -105,7 +105,7 @@ Date.prototype.addHours= function(h){
                         id="${result['mode']}">${mode_text}</span>
                     </h2>
   
-                    <div class="share-content">
+                    <div class="share-content" data-id="${result['original']['ID']}">
                       <div class="feedCard container-fluid p-0">
                         <div class="d-flex pr-3">
                           <a href="profile.php?id=${result['original']['user']}" class="cardUserImg">
@@ -120,7 +120,7 @@ Date.prototype.addHours= function(h){
                                 JSON.stringify({
                                   movie_id:result['original']['movie_id'],
                                   movie_type:result['original']['movie_type']
-                                })}' href="movie.php?id=${result['movie_id']}&type=${result['movie_type']}"></a> 
+                                })}' href="movie.php?id=${result['original']['movie_id']}&type=${result['original']['movie_type']}"></a> 
                                 • <a class="cardDate" data-tooltip="${new Date(result['original']['date_created']).addHours(7).toLocaleString()}" data-tooltip-location="bottom"
                                   href="single_post.php?id=${result['original']['ID']}">${getDuration(new Date(result['original']['date_created']))}</a>
                                 • <span class="cardMode" data-tooltip-location="bottom" data-tooltip="${result['original']['mode'] == 1? "Public" : result['original']['mode'] == 2? "Followers" : "Private"}"
@@ -183,6 +183,8 @@ Date.prototype.addHours= function(h){
                 e.preventDefault();
               } else if (target.classList.contains("see-more-reply") || target.parentNode.classList.contains("see-more-reply")) {
                 e.preventDefault();
+              } else if(postID != null) {
+                window.location = `single_post.php?id=${postID}`;
               }
             }
         })
