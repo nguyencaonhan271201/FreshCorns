@@ -10,9 +10,9 @@
         public $conn;
         public $followers = [];
         public $following = [];
-        // public $info = Infor[];
+        // public $info = new Infor[];
     
-        public function __construct($conn, $user_id) {
+        public function __construct($conn, $user_id = null) {
             $this->conn = $conn;
             $sql = "SELECT * FROM profiles WHERE ID = ?";
             $stmt = $this->conn->prepare($sql);
@@ -32,25 +32,6 @@
 
 
           }
-
-        // public function Profile($conn, $user_id){
-        //     $this->conn = $conn;
-        //     $sql = "SELECT * FROM Profiles WHERE ID = ?";
-        //     $stmt = $this->conn->prepare($sql);
-        //     $stmt->bind_param("i", $user_id);
-        //     $stmt->execute();
-        //     $results = $stmt->get_result();
-        //     if($results->num_rows == 1) {
-        //         $results = $results->fetch_assoc();
-        //       }
-        //     $this->user_id = $results['ID'];
-        //     $this->display_name = $results['display_name'];
-        //     $this->description = $results['description'];
-        //     $this->profile_img = $results['profile_img'];
-        //     $this->profile_cover = $results['profile_cover'];
-        //     $this->email = $results['email'];
-        //     $this->date_of_birth = $results['date_of_birth'];
-        // }
 
         public function getProfile($user_id){
             $sql = "SELECT * FROM profiles WHERE ID = ?";
