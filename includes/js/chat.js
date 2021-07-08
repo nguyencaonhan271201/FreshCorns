@@ -572,7 +572,7 @@ function ajaxSendMessageImage(fileUpload) {
     let formData = new FormData();
     formData.append("file", fileUpload.files[0]);
     formData.append("file_upload", true);
-    formData.append("csrf", message.querySelector('input[name="csrf"]').value)
+    formData.append("csrf", document.querySelector("#messageForm").querySelector('input[name="csrf"]').value)
     xhr.send(formData);
 }
 

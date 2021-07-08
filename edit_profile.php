@@ -2,10 +2,10 @@
     include "includes/header.php";  
     if (!$_SESSION['signed_in']) {
         if (headers_sent()) {
-            echo "<script>window.location.href = 'feeds.php';</script>";
+            echo "<script>window.location.href = 'profile.php';</script>";
         }
         else{
-            header("Location: feeds.php?");
+            header("Location: profile.php?");
         }
     }
 
@@ -137,7 +137,7 @@
                         ?>">Update Profile</button>
                     </div>
                     <div class="col-md-6 col-sm-12 col-12">
-                        <a class="btn btn-danger btn-block" role="button" href="feeds.php">Cancel</a>
+                        <a class="btn btn-danger btn-block" role="button" href="profile.php">Cancel</a>
                     </div>
                 </div>
             </form>

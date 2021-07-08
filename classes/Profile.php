@@ -7,10 +7,35 @@ class Profile {
     public $profile_cover;
     public $email;
     public $date_of_birth;
+    public $date_joined;
     public $gender;
     public $info = [];
+    public $followers = [];
+    public $following = [];
+    public $conn;
 
-    public function __construct($user_id, $display_name, $description, $gender, $profile_image, $profile_cover, $email, $date_of_birth) {
+    public function __construct($conn, $user_id) {
+        $this->conn = $conn;
+        $sql = "SELECT display_name, email, date_of_birth, gender, IFNULL(description, '') AS description, profile_image, profile_cover,
+        (SELECT date_created FROM users WHERE users.ID = profiles.ID) AS date_joined FROM profiles WHERE ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        if ($results->num_rows == 1) {
+            $results = $results->fetch_assoc();
+            $this->user_id = $user_id;
+            $this->display_name = $results['display_name'];
+            $this->description = $results['description'];
+            $this->profile_image = $results['profile_image'];
+            $this->profile_cover = $results['profile_cover'];
+            $this->email = $results['email'];
+            $this->date_of_birth = $results['date_of_birth'];
+            $this->date_joined = $results['date_joined'];
+        }
+    }
+
+    public function updateInfo($user_id, $display_name, $description, $gender, $profile_image, $profile_cover, $email, $date_of_birth) {
         $this->user_id = $user_id;
         $this->display_name = $display_name;
         $this->description = $description;
@@ -97,10 +122,10 @@ class Profile {
                     $_SESSION['name'] = $display;
                     $_SESSION['profile_img'] = $profile_image;
                     if (headers_sent()) {
-                        echo "<script>window.location.href = 'feeds.php'</script>";
+                        echo "<script>window.location.href = 'profile.php'</script>";
                     }
                     else{
-                        header("Location: feeds.php");
+                        header("Location: profile.php");
                     }
                 }
             }
@@ -114,5 +139,207 @@ class Profile {
             "profile_image" => $this->profile_image,
             "profile_cover" => $this->profile_cover,
         ];
+    }
+
+    public function getProfile($user_id){
+        $sql = "SELECT * FROM profiles WHERE ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        if($results->num_rows == 1) {
+            $results = $results->fetch_assoc();
+          }
+        return $results;
+    }
+
+    public function getFollowing(){
+        $sql = "SELECT * FROM relationships WHERE user1 = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $this->user_id);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        if($results->num_rows != 0) {
+            $results = $results->fetch_all(MYSQLI_ASSOC);
+            foreach ($results as $user_id) {
+                array_push($this->following, $user_id['user2']);
+            }
+            
+          }
+        return 0;
+    }
+
+    public function getFollowers(){
+        $sql = "SELECT * FROM relationships WHERE user2 = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $this->user_id);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        if($results->num_rows != 0) {
+            $results = $results->fetch_all(MYSQLI_ASSOC);
+            //var_dump($results);
+            foreach ($results as $user_id) {
+                array_push($this->followers, $user_id['user1']);
+            }
+          }
+        return 0;
+    }
+
+    public function addRelationship($user_id) {
+        $sql = "SELECT * FROM relationships WHERE user1 = ? AND user2 = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ii",$user_id, $this->user_id);
+        $stmt->execute();
+        if ($stmt->get_result()->num_rows == 0) {
+            $sql = "INSERT INTO relationships(`user1`, `user2`) VALUES (?,?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ii",$user_id, $this->user_id);
+            $stmt->execute();
+            if ($stmt->affected_rows == 1){
+                if (headers_sent()) {
+                    echo "<script>window.location.href = 'profile.php?user_id={$this->user_id}';</script>";
+                }
+                else{
+                    header("Location:profile.php?user_id=".$this->user_id);
+                }
+            }
+            else return false;
+        }
+        else 
+        {
+            return false;
+        }
+    }
+
+    public function deleteRelationship($user_id){
+        $sql = "DELETE FROM relationships WHERE user1 = ? AND user2 = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ii",$user_id, $this->user_id);
+        $stmt->execute();
+        if ($stmt->affected_rows == 1){
+            if (headers_sent()) {
+                echo "<script>window.location.href = 'profile.php?user_id={$this->user_id}';</script>";
+            }
+            else{
+                header("Location:profile.php?user_id=".$this->user_id);
+            }
+        }
+        else return false;
+    }
+
+    public function checkInfo($POST, &$errors) {
+        //Get input
+        $info = $POST['info'];
+        $start = $POST['start'];
+        $end = $POST['end'];
+        
+        //Check info
+        if ($info == "" || !filter_var($info, FILTER_SANITIZE_STRING)) {
+            $errors["info"] = "Information is not valid.";
+        }
+
+        //Check type
+        if (!isset($_POST['type']) || !in_array($_POST['type'], [0, 1])) {
+            $errors["type"] = "Info type is not valid.";
+        } else {
+            $type = $_POST['type'];
+        }
+
+        //Check start year
+        if ($start < 1900 || !filter_var($start, FILTER_VALIDATE_INT)) {
+            $errors["year"] = "Start year is not valid.";
+        }
+
+        //Check end year
+        if ($end != "") {
+            if ($end < 1900 || !filter_var($end, FILTER_VALIDATE_INT)) {
+                $errors["year"] = "End year is not valid.";
+            }
+        }
+
+        if (empty($errors)) {
+            $query = "INSERT INTO job_education_info(user_profile, info, type, start_year, end_year) VALUES (?, ?, ?, ?, ?)";
+            $stmt = $this->conn->prepare($query);
+            $check_end = $end == "" ? NULL : $end;
+            $stmt->bind_param("isiii", $_SESSION['user_id'], $info, $type, $start, $check_end);
+            $stmt->execute();
+            if ($stmt->affected_rows != 1) {
+                $errors['execute_err'] = "Server error. Please try again later!";
+            }
+        }
+    }
+
+    public static function getInfo($conn, $user) {
+        $sql = "SELECT * FROM job_education_info WHERE user_profile = ? ORDER BY start_year DESC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        return $results->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getSingleInfo($id) {
+        $sql = "SELECT * FROM job_education_info WHERE ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        if ($results->num_rows == 1) {
+            return $results->fetch_assoc();
+        } else return [];
+    }
+
+    public function editInfo($POST, &$errors) {
+        //Get input
+        $info = $POST['info'];
+        $start = $POST['start'];
+        $end = $POST['end'];
+
+        $id = $POST['id'];
+        
+        //Check info
+        if ($info == "" || !filter_var($info, FILTER_SANITIZE_STRING)) {
+            $errors["info"] = "Information is not valid.";
+        }
+
+        //Check type
+        if (!isset($_POST['type']) || !in_array($_POST['type'], [0, 1])) {
+            $errors["type"] = "Info type is not valid.";
+        } else {
+            $type = $_POST['type'];
+        }
+
+        //Check start year
+        if ($start < 1900 || !filter_var($start, FILTER_VALIDATE_INT)) {
+            $errors["year"] = "Start year is not valid.";
+        }
+
+        //Check end year
+        if ($end != "") {
+            if ($end < 1900 || !filter_var($end, FILTER_VALIDATE_INT)) {
+                $errors["year"] = "End year is not valid.";
+            }
+        }
+
+        if (empty($errors)) {
+            $query = "UPDATE job_education_info SET info = ?, type = ?, start_year = ?, end_year = ? WHERE ID = ?";
+            $stmt = $this->conn->prepare($query);
+            $check_end = $end == "" ? NULL : $end;
+            $stmt->bind_param("siiii", $info, $type, $start, $check_end, $id);
+            $stmt->execute();
+            if ($stmt->affected_rows == -1 || $stmt->errno > 0) {
+                $errors['execute_err'] = "Server error. Please try again later!";
+            }
+        }
+    }
+
+    public function deleteInfo($id, &$errors) {
+        $sql = "DELETE FROM job_education_info WHERE ID = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        if ($stmt->affected_rows != 1) {
+            $errors['execute_err'] = "Server error. Please try again later!";
+        }
     }
 }

@@ -9,7 +9,16 @@ getForm.addEventListener("submit", function(e) {
     let username = getForm.querySelector("input[name = 'create-username'").value;
     let password1 = getForm.querySelector("input[name = 'create-password1'").value;
     let password2 = getForm.querySelector("input[name = 'create-password2'").value;
-    let gender = getForm.querySelector("input[name = 'create-gender'").value;
+
+    //Check gender
+    let type;
+    if (getForm.querySelector("#male").checked) {
+      type = "male";
+    } else {
+      type = "female";
+    };
+
+
     let dob = getForm.querySelector("input[name = 'create-dob'").value;
     let csrf = getForm.querySelector("input[name = 'csrf'").value;
 

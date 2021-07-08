@@ -3,6 +3,7 @@
     include "config.php";
     include "classes/Database.php";
     include "classes/Validate.php";
+    include 'classes/Profile.php';
     include "classes/User.php";
     include "classes/ThisUser.php";
 

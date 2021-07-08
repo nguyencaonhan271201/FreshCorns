@@ -125,7 +125,9 @@ function updateSessionInfo() {
             my_id = result['user_id'];
             my_name = result['name'];
             my_image = result['profile_img'];
-            loadPosts();
+            if (loadPosts != null) {
+                loadPosts();
+            }
         }
     }
     xhr.send(`page=chat`);

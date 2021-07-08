@@ -1,6 +1,4 @@
 <?php
-include "Profile.php";
-
 class User {
     public $username;
     public $id;
@@ -38,16 +36,17 @@ class User {
         $stmt->execute();
         $result = $stmt->get_result()->fetch_assoc();
         if (!empty($result)) {
-            $this->profile = new Profile(
-                $this->id,
-                $result['display_name'],
-                $result['description'],
-                $result['gender'],
-                $result['profile_image'],
-                $result['profile_cover'],
-                $result['email'],
-                $result['date_of_birth']
-            );
+            // $this->profile = new Profile(
+            //     $this->id,
+            //     $result['display_name'],
+            //     $result['description'],
+            //     $result['gender'],
+            //     $result['profile_image'],
+            //     $result['profile_cover'],
+            //     $result['email'],
+            //     $result['date_of_birth']
+            // );
+            $this->profile = new Profile($this->conn, $this->id);
         }
     }
 }

@@ -647,3 +647,31 @@ body {
 .post-btn::after {
     display: none;
 }
+
+.profile-cover {
+    margin-top: 50px;
+    border-radius: 5px;
+}
+
+.profile-name {
+    color: black;
+    text-shadow: 0 0 4px rgb(0 0 0 / 20%);
+}
+
+.btn-edit-profile, .btn-follow, .btn-unfollow {
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgb(0 0 0 / 20%);
+}
+
+.btn-edit-profile a:hover, .btn-follow a:hover, .btn-unfollow a:hover  {
+    text-decoration: none;
+}
+
+.middle-wrapper {
+    padding-left: 0px;
+    padding-right: 15px;
+}
+
+.edit-info {
+    cursor: pointer;
+}

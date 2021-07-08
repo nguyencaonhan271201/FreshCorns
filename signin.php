@@ -119,7 +119,7 @@
                     <div class="form-group">
                         <label for="type">Gender</label>
                         <div class="form-check">
-                            <input type="radio" name="create-gender" value="male" <?php 
+                            <input type="radio" name="create-gender" id="male" value="male" <?php 
                                 if((isset($_POST['create-gender']) && $_POST['create-gender'] == 'male') || !isset($_POST['create-gender']))
                                     echo "checked";
                             ?>>
@@ -128,7 +128,7 @@
                             </label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" name="create-gender" value="female" <?php 
+                            <input type="radio" name="create-gender" id="female" value="female" <?php 
                                 if(isset($_POST['create-gender']) && $_POST['create-gender'] == 'female')
                                     echo "checked";
                             ?>>
