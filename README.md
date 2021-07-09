@@ -1,5 +1,6 @@
 # OFSocialNetwork
 **Fresh Corns Project** is a social network built to provide social with a platform to socialize, to make friends, to discuss, to review, to share and in addition help to grow the community of people sharing the same interest in Movies and Films around the world. 
+
 ![Landing Page](https://firebasestorage.googleapis.com/v0/b/cs204finalproj.appspot.com/o/github%2FScreenshot%202021-07-09%2021.40.14.png?alt=media&token=ad0a7ffa-89cb-44dc-817c-4163ae2f4d07)
 ![Movie](https://firebasestorage.googleapis.com/v0/b/cs204finalproj.appspot.com/o/github%2FScreenshot%202021-07-09%2021.40.24.png?alt=media&token=84ea8d19-a035-455f-a610-83157e323723)
 ![Authentication](https://firebasestorage.googleapis.com/v0/b/cs204finalproj.appspot.com/o/github%2FScreenshot%202021-07-09%2021.40.34.png?alt=media&token=837bd903-0792-426c-983f-b94f943d22c4)
