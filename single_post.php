@@ -156,7 +156,7 @@
                                             <p clas="cardCap"><?php echo htmlspecialchars($post->post['original']['content'])?></p>      
                                             
                                             <div class="cardMedia">  
-                                                <img src="<?php echo htmlspecialchars($post->post['media'])?>" onerror="this.style.display='none'">
+                                                <img src="<?php echo htmlspecialchars($post->post['original']['media'])?>" onerror="this.style.display='none'">
                                             </div>
                                         </div>
                                     </div>
