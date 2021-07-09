@@ -8,17 +8,6 @@
         $post->getSinglePost($_GET['id']);
     }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/css/selectize.bootstrap4.min.css" integrity="sha512-MMojOrCQrqLg4Iarid2YMYyZ7pzjPeXKRvhW9nZqLo6kPBBTuvNET9DBVWptAo/Q20Fy11EIHM5ig4WlIrJfQw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="includes/css/feed.css?v=<?=time();?>">
     <link rel="stylesheet" href="includes/css/style.css?v=<?=time();?>">
     <script
@@ -28,8 +17,6 @@
     <link rel="stylesheet" href="./includes/css/chat.css">
     <link rel="stylesheet" href="./includes/css/emoji/emojionearea.min.css">
     <script src="./includes/js/emoji/emojionearea.min.js"></script>
-</head>
-<body>
 
 <?php if (!empty($post->post)):?>
 <?php 
@@ -95,7 +82,7 @@
                             </div>
                             <?php endif?>                            
                             <div class="col text-center">      
-                                <i class="singleCardShare fa fa-share" aria-hidden="true" id="<?php echo htmlspecialchars($post->post['ID'])?>"></i>
+                                <i class="singleCardShare bi bi-arrow-counterclockwise" aria-hidden="true" id="<?php echo htmlspecialchars($post->post['ID'])?>"></i>
                             </div>
                         </div>
                     </div>
@@ -125,7 +112,7 @@
                         <div class="cardInfos container-fluid p-0">
                             <div>
                                 <h2>
-                                <a href=""><?php echo htmlspecialchars($post->post['display_name'])?></a> 
+                                <a href="profile.php?id=<?php echo $post->post['user'];?>"><?php echo htmlspecialchars($post->post['display_name'])?></a> 
                                 • <?php echo htmlspecialchars(getTimeString($post->post['date_created']))?>
                                 • <span class="cardMode" data-tooltip-location="bottom" data-tooltip=<?php 
                                     if ($post->post['mode'] == 1)
@@ -138,7 +125,6 @@
                                 id="<?php echo htmlspecialchars($post->post['mode'])?>"><?php echo $mode_text ?></span>
                                 </h2>
                             </div>   
-                        </div>
 
                         <div class="share-content" data-id="<?php echo $post->post['original']['ID'];?>">
                             <div class="feedCard container-fluid p-0">
@@ -147,30 +133,31 @@
                                         <img src="<?php echo htmlspecialchars($post->post['original']['profile_image'])?>">
                                     </a>
 
-                                    <div class="cardInfos container-fluid p-0">
-                                        <div>
-                                            <h2>
-                                            <a href="profile.php?id=<?php echo $post->post['original']['user'];?>"><?php echo htmlspecialchars($post->post['original']['display_name'])?></a> 
-                                            talking about 
-                                            <a class="movie_title" id='
-                                            <?php echo json_encode(array('movie_id'=>$post->post['original']['movie_id'],'movie_type'=>$post->post['original']['movie_type']))?>' href=""></a> 
-                                            • <?php echo htmlspecialchars(getTimeString($post->post['original']['date_created']))?>
-                                            • <span class="cardMode" data-tooltip-location="bottom" data-tooltip=<?php 
-                                                if ($post->post['original']['mode'] == 1)
-                                                    echo "Public";
-                                                elseif ($post->post['original']['mode'] == 2)
-                                                    echo "Followers";
-                                                else
-                                                    echo "Private";
-                                            ?>
-                                            id="<?php echo htmlspecialchars($post->post['original']['mode'])?>"><?php echo $mode_text ?></span>
-                                            </h2>
-                                        </div>
+                                        <div class="cardInfos container-fluid p-0">
+                                            <div>
+                                                <h2>
+                                                <a href="profile.php?id=<?php echo $post->post['original']['user'];?>"><?php echo htmlspecialchars($post->post['original']['display_name'])?></a> 
+                                                talking about 
+                                                <a class="movie_title" id='
+                                                <?php echo json_encode(array('movie_id'=>$post->post['original']['movie_id'],'movie_type'=>$post->post['original']['movie_type']))?>' href=""></a> 
+                                                • <?php echo htmlspecialchars(getTimeString($post->post['original']['date_created']))?>
+                                                • <span class="cardMode" data-tooltip-location="bottom" data-tooltip=<?php 
+                                                    if ($post->post['original']['mode'] == 1)
+                                                        echo "Public";
+                                                    elseif ($post->post['original']['mode'] == 2)
+                                                        echo "Followers";
+                                                    else
+                                                        echo "Private";
+                                                ?>
+                                                id="<?php echo htmlspecialchars($post->post['original']['mode'])?>"><?php echo $mode_text ?></span>
+                                                </h2>
+                                            </div>
 
-                                        <p clas="cardCap"><?php echo htmlspecialchars($post->post['original']['content'])?></p>      
-                                        
-                                        <div class="cardMedia">  
-                                            <img src="<?php echo htmlspecialchars($post->post['media'])?>" onerror="this.style.display='none'">
+                                            <p clas="cardCap"><?php echo htmlspecialchars($post->post['original']['content'])?></p>      
+                                            
+                                            <div class="cardMedia">  
+                                                <img src="<?php echo htmlspecialchars($post->post['media'])?>" onerror="this.style.display='none'">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>   

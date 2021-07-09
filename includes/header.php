@@ -117,10 +117,10 @@
                 <ul class="navbar-nav float-lg-right">
                     <?php if(!$_SESSION['signed_in']): ?>
                         <li class="nav-item active">
-                            <a class="nav-link sign-in" href="signin.php"><i class="fa fa-sign-in-alt" aria-hidden="true"></i> Sign in</a>
+                            <a class="nav-link sign-in" href="signin.php"><i class="bi bi-box-arrow-in-right"></i> Sign in</a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link join-us" href="signin.php?signup"><i class="fa fa-user-plus" aria-hidden="true"></i> Join us</a>
+                            <a class="nav-link join-us" href="signin.php?signup"><i class="bi bi-person-plus"></i> Join us</a>
                         </li>
                     <?php elseif($_SESSION['signed_in']): ?>
                         <li class="nav-item active dropdown">
@@ -142,4 +142,5 @@
             <?php endif;?>
         </div>
     </nav>
+    
     <?php endif; ?>

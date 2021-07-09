@@ -43,7 +43,7 @@ h1 {
     color: #0082FF;
 }
 
-h2, h3, h4, p, li, a, button, select {
+h2, h3, h4, p, li, a, button, select, i{
     font-family: 'body';
     font-weight: bold;
 }
@@ -460,6 +460,9 @@ body {
     height: calc(100vh - 82px);
     overflow-y: auto;
 }
+.films-items h1, .contact-items h1{
+    font-size: large;
+}
 .film-box {
     border-radius: 5px;
     padding: 10px;
@@ -694,10 +697,10 @@ body {
     cursor: pointer;
 }
 
-.h1-logo svg {
+/*.h1-logo svg {
     width: 75px;
     height: 75px;
-}
+}*/
 
 .fade-in {
     animation: fadeInAnimation ease 300ms forwards;

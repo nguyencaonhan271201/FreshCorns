@@ -10,6 +10,10 @@ html {
     display: none;
 }
 
+body{
+    min-height: 220vh;
+}
+
 body *{
     transition: all 0.3s ease;
 }
@@ -27,10 +31,13 @@ h1{
 
 h1#intro{
     font-size: 100px;
+    display: inline;
 }
-
 h1#intro>span{
-    max-width: 10px;
+    vertical-align: baseline;
+}
+h1#intro svg{
+    max-height: 100px;
 }
 
 h2, h3, h4, button {
@@ -70,6 +77,10 @@ h3{
     top: 40%;
     left: 20%;
 }
+.tagline_box>h1{
+    text-align: left;
+    font-size: 100px;
+}
 
 .img_box{
     position: absolute;
@@ -85,4 +96,28 @@ h3{
 
 u {
     text-decoration-thickness: 3px;
+}
+
+.credit>img{
+    max-width: 100px;
+    max-height: 15px;
+    object-fit: contain;
+    object-position: left;
+}
+
+footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+}
+
+footer h3{
+    font-size: xx-small;
+    vertical-align: middle;
+}
+
+footer h3 img{
+    margin-bottom: 2px;
 }

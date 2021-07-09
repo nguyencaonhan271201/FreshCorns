@@ -223,7 +223,7 @@ function printPosts(div,results){
             `;
             html+=`            
                 <div class="col text-center">              
-                  <i class="cardShare fa fa-share" aria-hidden="true" id="${result['ID']}"></i>
+                  <i class="cardShare bi bi-arrow-counterclockwise" aria-hidden="true" id="${result['ID']}"></i>
                 </div>
               </div>
             </div>
@@ -294,7 +294,7 @@ function printPosts(div,results){
                   </div>
                 </div>
                 <div class="col text-center">              
-                  <i class="cardComment bi bi-chat-text" id="${result['ID']}"> <span style="font-style: normal !important;">${result['number_of_comments']}</span></i>
+                  <i class="cardComment bi bi-chat-text" id="${result['ID']}"><span style="font-style: normal !important;">${result['number_of_comments']}</span></i>
                 </div>
             `;
             html+=`
@@ -324,7 +324,7 @@ function printPosts(div,results){
       let id = $(this).attr('id');
       window.location.href = `single_post.php?id=${id}&comment_scroll`;
     });  
-    document.querySelectorAll(".feedCard").forEach(box => {
+    /*document.querySelectorAll(".feedCard").forEach(box => {
       box.addEventListener("click", function(e) {
           let target = e.target;
           let postID = e.target.closest(".feedCard");
@@ -351,7 +351,7 @@ function printPosts(div,results){
             }
           }
       })
-    });
+    });*/
 }
 
 function ReactPost(object){

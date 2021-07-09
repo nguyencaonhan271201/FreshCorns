@@ -171,7 +171,11 @@ function loadNoReactions(){
         $.ajax({
             url:`includes/php/feed/ajax_react_post_get.php?post_id=${temp.attr('id')}`,
             success:function(data){
-                temp.html(data);
+                temp.html(`<span style="
+                    font-family: 'body'!important; 
+                    font-style: normal!important;
+                    font-weight: bold;
+                "> ${data}</span>`);
             }
         });
         $.ajax({

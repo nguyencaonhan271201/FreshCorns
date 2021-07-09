@@ -44,6 +44,9 @@ function printMovieDatas(result,palette,type){
     $('.nav-link.dropdown-toggle').attr("style",function(i,s) { 
         return (s || '') + `color: rgb(${palette[0][0]},${palette[0][1]},${palette[0][2]})!important;`;
     });
+    $('.nav-link').attr("style",function(i,s) { 
+        return (s || '') + `color: rgb(${palette[0][0]},${palette[0][1]},${palette[0][2]})!important;`;
+    });
 
     if (type==1){
         $('h1#year').text(new Date(result['release_date']).getFullYear()).css("color",`rgb(${palette[1][0]},${palette[1][1]},${palette[1][2]})`).css("background-color",`rgb(${palette[0][0]},${palette[0][1]},${palette[0][2]})`);
