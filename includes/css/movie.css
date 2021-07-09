@@ -14,16 +14,26 @@ body{
     position: relative;
     max-width: 100vw;
     min-height: 200vh;
-    background-size: cover;
+    /*background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-position: center center;
+    background-position: center center;*/
+}
+
+#backdrop{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 0!important;
 }
 
 #poster{
     position: absolute;
     top: 16%;
     left: 20%;
+    z-index: 2;
 }
 
 #basic_infos{
@@ -31,6 +41,7 @@ body{
     width: 60%;
     top: 12%;
     left: 40%;
+    z-index: 3;
 }
 
 #year{
@@ -40,7 +51,8 @@ body{
     font-size: 60px;
     width: 40%;
     text-align: right;
-    margin-right: 10px;
+    margin-right: 10px;    
+    z-index: 3;
 }
 
 #title{

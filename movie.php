@@ -4,6 +4,7 @@
 ?>
 <link rel="stylesheet" href="includes/css/movie.css?v=<?=time();?>">
 <link rel="stylesheet" href="includes/css/feed.css?v=<?=time();?>">
+    <img id="backdrop" crossorigin="anonymous">
 
     <img id="poster" class="img-fluid w-25" crossorigin="anonymous">
     
@@ -24,6 +25,7 @@
        
     <script src="includes/js/main.js"></script>
     <script type="text/javascript" src="includes/js/themoviedb.js" charset="utf-8"></script>
+    <script type="text/javascript" src="includes/js/jquery.duotone.js" charset="utf-8"></script>
     <script type="text/javascript" src="includes/js/movie.js" charset="utf-8"></script>
 </html>
 
