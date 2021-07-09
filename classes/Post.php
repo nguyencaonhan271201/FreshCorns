@@ -301,7 +301,7 @@ class Post {
         WHERE p1.user = r.user2 AND r.user1 = ?
         AND (p1.share_from IS NULL
         OR EXISTS (SELECT * FROM relationships r1 WHERE r1.user2 = (SELECT user FROM posts WHERE ID = p1.share_from) AND r1.user1 = ?))
-        AND (p1.mode = 2 OR p1.mode = 3))
+        AND (p1.mode = 1 OR p1.mode = 2))
         ORDER BY p.date_created ASC","iii",array($user_id,$user_id,$user_id));
 
         for ($i = 0; $i < count($posts); $i++) {
@@ -368,16 +368,18 @@ class Post {
             $posts = getRows($conn,
             "SELECT DISTINCT p.*, pf.display_name, pf.profile_image
             FROM posts p JOIN profiles pf
-            ON p.user = pf.ID WHERE p.user = ? AND p.ID NOT IN (SELECT ID FROM posts WHERE user = ? AND mode = 3)
-            AND p.ID IN (SELECT ID FROM posts WHERE user = ? AND mode = 2 AND EXISTS (SELECT * FROM relationships WHERE user1 = ? AND user2 = ?))
-            AND p.ID IN
-            (SELECT p1.ID
-            FROM posts p1, relationships r
-            WHERE p1.user = r.user2 AND r.user1 = ?
-            AND (p1.share_from IS NULL
-            OR EXISTS (SELECT * FROM relationships r1 WHERE r1.user2 = (SELECT user FROM posts WHERE ID = p1.share_from) AND r1.user1 = ?))
-            AND (p1.mode = 2 OR p1.mode = 3))
-            ORDER BY p.date_created ASC","iiiiiii",array($user_id, $user_id, $user_id, $_SESSION['user_id'], $user_id, $_SESSION['user_id'], $_SESSION['user_id']));
+            ON p.user = pf.ID WHERE p.user = ?
+            AND (p.ID IN (SELECT ID FROM posts WHERE user = ? AND mode = 1 OR mode = 2 AND share_from IS NULL)
+            OR p.ID IN
+            (SELECT p.ID
+            FROM posts p
+            WHERE user = ? AND mode = 1 OR mode = 2 AND share_from IS NOT NULL
+            AND (SELECT mode FROM posts p2 WHERE p2.ID = p.share_from) = 1
+            OR EXISTS (SELECT * FROM relationships WHERE user1 = ? AND user2 = (
+                SELECT user FROM posts p1 WHERE p1.ID = p.share_from
+            ))))
+            AND p.ID IN (SELECT ID FROM posts WHERE user = ?)
+            ORDER BY p.date_created ASC","iiiii",array($user_id, $user_id, $user_id, $_SESSION['user_id'], $user_id));
         } else {
             $posts = getRows($conn,
             "SELECT p.*, pf.display_name, pf.profile_image FROM posts p JOIN profiles pf
@@ -387,7 +389,7 @@ class Post {
         for ($i = 0; $i < count($posts); $i++) {
           if ($posts[$i]['share_from'] != null) {
               $query = "SELECT p.ID, p.user, p.content, p.movie_id, p.movie_type, p.media, p.mode, p.share_from, p.date_created, u.display_name, u.profile_image
-              FROM posts p, profiles u WHERE p.user = u.ID AND p.ID = ?";
+              FROM posts p JOIN profiles u ON p.user = u.ID WHERE p.ID = ?";
               $stmt = $conn->prepare($query);
               $stmt->bind_param("i", $posts[$i]['share_from']);
               $stmt->execute();

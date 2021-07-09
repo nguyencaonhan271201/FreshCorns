@@ -341,8 +341,6 @@ function printPosts(div,results){
               && !target.classList.contains("emojionearea-picker") && !target.classList.contains("emojionearea-wrapper")) {
               console.log(postID);
               window.location = `single_post.php?id=${postID}`;
-            } else {
-              e.preventDefault();
             }
           }
       })
