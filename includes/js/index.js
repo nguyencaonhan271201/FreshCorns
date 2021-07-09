@@ -2,13 +2,13 @@ let img_links=[];
 theMovieDb.movies.getPopular({}, data => {
     let results=JSON.parse(data)['results'];
     results.forEach(result=>{
-        img_links.push(result['backdrop_path']);
+        if (result['backdrop_path'] != null) img_links.push(result['backdrop_path']);
     });
 
     theMovieDb.tv.getPopular({}, data => {
         let results=JSON.parse(data)['results']; 
         results.forEach(result=>{
-            img_links.push(result['backdrop_path']);
+            if (result['backdrop_path'] != null) img_links.push(result['backdrop_path']);
         });
         img_links.sort((a, b) => 0.5 - Math.random());
 
@@ -16,24 +16,23 @@ theMovieDb.movies.getPopular({}, data => {
         setInterval(function(){
             if (i+1 > img_links.length) i = 0;
             else i++;
-            if (img_links[i]!=null){
-                $('img#carousel').css("display","block");
-                if (document.querySelector("img").classList.contains("fade-in")) {
-                    $("img#carousel").removeClass("fade-in");
-                    $('img#carousel').addClass("fade-out");
+
+            $('img#carousel').css("display","block");
+            if (document.querySelector("img").classList.contains("fade-in")) {
+                $("img#carousel").removeClass("fade-in");
+                $('img#carousel').addClass("fade-out");
+            }
+            
+            setTimeout(function() {
+                $('img#carousel').attr("src",theMovieDb.common.images_uri+'original'+img_links[i]);
+            }, 300);
+            
+            setTimeout(function() {
+                if (document.querySelector("img#carousel").classList.contains("fade-out")) {
+                    $("img#carousel").removeClass("fade-out");
                 }
-                
-                setTimeout(function() {
-                    $('img#carousel').attr("src",theMovieDb.common.images_uri+'original'+img_links[i]);
-                }, 300);
-                
-                setTimeout(function() {
-                    if (document.querySelector("img#carousel").classList.contains("fade-out")) {
-                        $("img#carousel").removeClass("fade-out");
-                    }
-                    $('img#carousel').addClass("fade-in");
-                }, 600)
-            }            
+                $('img#carousel').addClass("fade-in");
+            }, 600)
         }, 5000);
 
     }, data =>{
