@@ -423,12 +423,14 @@ body {
 .mention-a, .mention-a:hover {
     color: black;
     background: rgba(24, 119, 242, 0.2);
+    font-family: 'header';
     text-decoration: none;
 }
 
 .mention-a-display, .mention-a-display:hover {
     color: black;
     font-weight: 900;
+    font-family: 'header';
     font-size: 16px !important;
     text-decoration: none;
 }
@@ -675,8 +677,8 @@ body {
 }
 
 .profile-name {
-    color: black;
-    text-shadow: 0 0 4px rgb(0 0 0 / 20%);
+    color: white;
+    text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
 }
 
 .btn-edit-profile, .btn-follow, .btn-unfollow {
@@ -710,6 +712,14 @@ body {
 .fade-out {
     animation: fadeOutAnimation ease 300ms forwards;
     animation-iteration-count: 1;
+}
+
+.singleCardShare {
+    cursor: pointer;
+}
+
+.profile-cover, .profile-pic {
+    cursor: pointer;
 }
 
 @keyframes fadeOutAnimation {

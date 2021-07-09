@@ -11,11 +11,11 @@ getForm.addEventListener("submit", function(e) {
     let password2 = getForm.querySelector("input[name = 'create-password2'").value;
 
     //Check gender
-    let type;
+    let gender;
     if (getForm.querySelector("#male").checked) {
-      type = "male";
+        gender = "male";
     } else {
-      type = "female";
+        gender = "female";
     };
 
 
@@ -42,6 +42,7 @@ getForm.addEventListener("submit", function(e) {
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.onload = function() {
         if(this.status == 200 && this.readyState == 4) {
+            console.log(this.responseText);
             let errors = JSON.parse(this.responseText);
             if (errors.length != 0 || !dob) {
                 if (errors['display']) {

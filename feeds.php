@@ -37,12 +37,12 @@
             <div class="films-list p-0 m-0">
                 
                 <div class="films-items">
-                    <h1 class="ml-2"><i class="fas fa-fire-alt"></i>Movies</h6>
+                    <h1 class="ml-2"><i class="fas fa-fire-alt"></i> Movies</h6>
                     <hr class="m-0">
                     <div class="films">
 
                     </div>
-                    <h1 class="ml-2"><i class="fas fa-fire-alt"></i>TV Series</h6>
+                    <h1 class="ml-2"><i class="fas fa-fire-alt"></i> TV Series</h6>
                     <hr class="m-0">
                     <div class="TVs">
                     

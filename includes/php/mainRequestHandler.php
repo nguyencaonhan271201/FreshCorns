@@ -2,6 +2,7 @@
 include('db.php');
 include('../../classes/Post.php');
 include('../../classes/Movies.php');
+include('../../classes/Profile.php');
 include('../../classes/User.php');
 include('../../classes/Validate.php');
 include('../../classes/ThisUser.php');

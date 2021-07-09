@@ -6,10 +6,9 @@ let colorThief = new ColorThief();
 
 let indexIsSignedIn = true;
 
-let preFix = "/FreshCorns-Tan/merge_test%204"
+let preFix = "/CS204/FinalProject/FreshCornsOfficial"
 let isIndexPage = (window.location.pathname == preFix + '/' 
 || window.location.pathname == preFix + '/index' || window.location.pathname == preFix + '/index.php');
-
 
 //let prevScrollpos = window.pageYOffset;
 let moviesSearch = [];
@@ -97,13 +96,13 @@ function outputHeaderSearchResult(results) {
 
 function outputHeaderSearchMovies(query) {
     headerSearchMoviesZone.innerHTML = "";
-    console.log(moviesSearch);
+    //console.log(moviesSearch);
     moviesSearch.forEach(result => {
         if (result['media_type'] == 'tv' || result['media_type'] == 'movie') {
             let getHref = `movie.php?id=${result['id']}&type=${result['media_type'] == 'tv'? 0 : 1}`;
             let filmTitle = result['media_type'] == 'tv'? result['name'] : result['title'];
             let filmPoster = result['poster_path'] != null? 'https://image.tmdb.org/t/p/w185' + result['poster_path'] : "https://firebasestorage.googleapis.com/v0/b/cs204finalproj.appspot.com/o/866069.png?alt=media&token=fe8a87b5-c062-496d-a7d2-60ad9559fcb3";
-            console.log(filmTitle);
+            //console.log(filmTitle);
             if ((result['media_type'] != 'tv' && result['media_type'] != 'movie') || filmTitle.toLowerCase().indexOf(query.toLowerCase()) != -1) {
                 let html = `<a href="${getHref}">
                 <div class="member search-result d-flex flex-row justify-content-start align-items-center" data-id=${result.ID}>
@@ -141,7 +140,9 @@ function updateSessionInfo() {
             my_id = result['user_id'];
             my_name = result['name'];
             my_image = result['profile_img'];
-            loadPosts();
+            if (!isIndexPage) {
+                loadPosts();
+            }
         }
     }
     xhr.send(`page=chat`);

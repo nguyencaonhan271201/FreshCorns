@@ -230,7 +230,7 @@ function printPosts(div,results){
           </div>
         `;
         } 
-        else 
+        else
         {
           let share_mode_text = '';
           if (result['original']['mode']==1)  share_mode_text='<i class="bi bi-globe"></i>';
@@ -294,7 +294,7 @@ function printPosts(div,results){
                   </div>
                 </div>
                 <div class="col text-center">              
-                  <i class="cardComment bi bi-chat-text" id="${result['ID']}"><span style="font-style: normal !important;">${result['number_of_comments']}</span></i>
+                  <i class="cardComment bi bi-chat-text" id="${result['ID']}"> <span style="font-style: normal !important;">${result['number_of_comments']}</span></i>
                 </div>
             `;
             html+=`
@@ -310,21 +310,7 @@ function printPosts(div,results){
     loadMovieTitles();
     loadNoReactions();
 
-    div.find(".cardReact").click(function(){
-      ReactPost($(this));
-    });
-    div.find(".cardEdit").click(function(){
-      EditPost($(this));
-    });  
-    div.find(".cardShare").click(function(){
-      document.querySelector("#shareConfirmationModal").querySelector("#sharePostID").innerHTML = $(this).attr('id'); 
-      $("#shareConfirmationModal").modal("show");
-    });
-    div.find(".cardComment").click(function(){
-      let id = $(this).attr('id');
-      window.location.href = `single_post.php?id=${id}&comment_scroll`;
-    });  
-    /*document.querySelectorAll(".feedCard").forEach(box => {
+    document.querySelectorAll(".feedCard").forEach(box => {
       box.addEventListener("click", function(e) {
           let target = e.target;
           let postID = e.target.closest(".feedCard");
@@ -345,13 +331,31 @@ function printPosts(div,results){
               e.preventDefault();
             } else if (target.classList.contains("see-more-reply") || target.parentNode.classList.contains("see-more-reply")) {
               e.preventDefault();
-            } else if (!checkSinglePostPage && postID != "") {
+            } else if (!checkSinglePostPage && postID != "" && !target.classList.contains("cardComment")
+            && !target.classList.contains("cardEdit") && !target.classList.contains("cardShare") && !target.classList.contains("cardReact")) {
               console.log(postID);
               window.location = `single_post.php?id=${postID}`;
+            } else {
+              e.preventDefault();
             }
           }
       })
-    });*/
+    });
+
+    div.find(".cardReact").click(function(){
+      ReactPost($(this));
+    });
+    div.find(".cardEdit").click(function(){
+      EditPost($(this));
+    });  
+    div.find(".cardShare").click(function(){
+      document.querySelector("#shareConfirmationModal").querySelector("#sharePostID").innerHTML = $(this).attr('id'); 
+      $("#shareConfirmationModal").modal("show");
+    });
+    div.find(".cardComment").click(function(){
+      let id = $(this).attr('id');
+      window.location.href = `single_post.php?id=${id}&comment_scroll`;
+    });  
 }
 
 function ReactPost(object){

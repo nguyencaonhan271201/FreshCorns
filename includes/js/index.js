@@ -50,7 +50,7 @@ $(document).ready(function(){
 });
 
 function colorize(palette){
-    console.log(palette);
+    //console.log(palette);
     $('.navbar').removeClass('bg-light');
     $('.navbar').css("background-color",`rgb(${palette[0][0]},${palette[0][1]},${palette[0][2]})`);
     $('.navbar .logo').css("fill",`rgb(${palette[1][0]},${palette[1][1]},${palette[1][2]})`)

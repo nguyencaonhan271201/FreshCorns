@@ -1,11 +1,11 @@
 <?php 
     //Handle connection to database
     include "config.php";
-    include "classes/Database.php";
-    include "classes/Validate.php";
-    include 'classes/Profile.php';
-    include "classes/User.php";
-    include "classes/ThisUser.php";
+    // include "classes/Database.php";
+    // include "classes/Validate.php";
+    // include 'classes/Profile.php';
+    // include "classes/User.php";
+    // include "classes/ThisUser.php";
 
     $site_name = basename($_SERVER['PHP_SELF'], ".php");
 
@@ -130,8 +130,9 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="chat.php"><i class="fa fa-comments" aria-hidden="true"></i> Chat</a>
+                                <a class="dropdown-item" href="profile.php"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="edit_profile.php"><i class="fa fa-user" aria-hidden="true"></i> Edit Profile</a>
+                                <a class="dropdown-item" href="edit_profile.php"><i class="fas fa-edit    "></i> Edit Profile</a>
                                 <a class="dropdown-item" href="change_pass.php"><i class="fa fa-key" aria-hidden="true"></i> Change Password</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="logout.php"><i class="fa fa-sign-out-alt"></i> Logout</a>

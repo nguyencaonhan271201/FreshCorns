@@ -444,7 +444,7 @@ document.querySelectorAll(".btn-info-edit").forEach(btn => {
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr.onload = function() {
                 if(this.status == 200 && this.readyState == 4) {
-                    console.log(this.responseText);
+                    //console.log(this.responseText);
                     let errors = JSON.parse(this.responseText);
                     if (errors.length != 0) {
                         if (errors['execute_err']) {
@@ -460,3 +460,16 @@ document.querySelectorAll(".btn-info-edit").forEach(btn => {
     })
 })
 
+document.querySelector(".profile-cover").addEventListener("click", function(e) {
+  e.preventDefault();
+  let getURL = e.target.src;
+  loadImage(getURL);
+  showImageBox();
+})
+
+document.querySelector(".profile-pic").addEventListener("click", function(e) {
+  e.preventDefault();
+  let getURL = e.target.src;
+  loadImage(getURL);
+  showImageBox();
+})

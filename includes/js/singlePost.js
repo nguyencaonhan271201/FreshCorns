@@ -375,6 +375,15 @@ function outputComments(result) {
             }
         })
     }); 
+
+    if (result.length == 0) {
+        let urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has("comment_scroll")) {
+            setTimeout(function() {
+                document.querySelector(".comment-section").scrollIntoView();
+            }, 100);
+        }
+    }
 }
 
 function commentReactAction(commentID) {

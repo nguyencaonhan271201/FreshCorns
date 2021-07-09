@@ -270,17 +270,16 @@ class Post {
 
     public static function getAllPostsPublic($conn, $user_id){
       $posts = getRows($conn,
-        "select p.*, (SELECT COUNT(*) FROM comments c WHERE c.post = p.ID) AS number_of_comments, pf.display_name,pf.profile_image
-        from posts p, profiles pf
-        where p.user = pf.ID and p.mode = 1 AND p.share_from IS NULL
-        OR EXISTS (SELECT * FROM relationships r WHERE r.user2 = (SELECT user FROM posts WHERE ID = p.share_from) AND r.user1 = ?)
-        ORDER BY p.date_created ASC","i",
+        "select p.*, (SELECT COUNT(*) FROM comments c WHERE c.post = p.ID) AS number_of_comments, pf.display_name,pf.profile_image 
+        from posts p JOIN profiles pf ON p.user = pf.ID WHERE p.mode = 1 AND p.share_from IS NULL 
+        OR p.mode = 1 AND EXISTS (SELECT * FROM relationships r WHERE r.user2 = (SELECT user FROM posts WHERE ID = p.share_from) 
+        AND r.user1 = ? ORDER BY p.date_created ASC)","i",
         array($user_id));
 
         for ($i = 0; $i < count($posts); $i++) {
           if ($posts[$i]['share_from'] != null) {
               $query = "SELECT p.ID, p.user, p.content, p.movie_id, p.movie_type, p.media, p.mode, p.share_from, p.date_created, u.display_name, u.profile_image
-              FROM posts p, profiles u WHERE p.user = u.ID AND p.ID = ? AND p.mode=1";
+              FROM posts p, profiles u WHERE p.user = u.ID AND p.ID = ?";
               $stmt = $conn->prepare($query);
               $stmt->bind_param("i", $posts[$i]['share_from']);
               $stmt->execute();
