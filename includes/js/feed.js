@@ -332,7 +332,13 @@ function printPosts(div,results){
             } else if (target.classList.contains("see-more-reply") || target.parentNode.classList.contains("see-more-reply")) {
               e.preventDefault();
             } else if (!checkSinglePostPage && postID != "" && !target.classList.contains("cardComment")
-            && !target.classList.contains("cardEdit") && !target.classList.contains("cardShare") && !target.classList.contains("cardReact")) {
+              && !target.classList.contains("cardEdit") && !target.classList.contains("cardShare") && !target.classList.contains("cardReact") 
+              && !target.classList.contains("postFile") && !target.classList.contains("bi-image")
+              && !target.classList.contains("editDelete") && !target.classList.contains("editCancel") && !target.classList.contains("editSubmit")
+              && !target.classList.contains("selectize-control") && !target.classList.contains("selectize-input") && !target.classList.contains("postMode")
+              && !target.classList.contains("postCap") && !target.classList.contains("emojionearea-editor") && !target.classList.contains("emojionearea-button")
+              && !target.classList.contains("emojionearea-button-open") && !target.classList.contains("emojionearea-button-close")
+              && !target.classList.contains("emojionearea-picker") && !target.classList.contains("emojionearea-wrapper")) {
               console.log(postID);
               window.location = `single_post.php?id=${postID}`;
             } else {
@@ -468,7 +474,12 @@ function EditPost(object){
       url: `includes/php/feed/ajax_post_delete.php?postId=${id}`,
       success: function(data){
         //$('#php_return').html(data);
-        loadPosts();
+        var pageURL = $(location).attr("href")
+        if (pageURL.indexOf("single_post") != -1) {
+          window.location.replace("feeds.php")
+        } else {
+          loadPosts();
+        }
       }
     });
   });

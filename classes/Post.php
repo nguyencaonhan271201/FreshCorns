@@ -368,7 +368,8 @@ class Post {
             $posts = getRows($conn,
             "SELECT DISTINCT p.*, pf.display_name, pf.profile_image
             FROM posts p JOIN profiles pf
-            ON p.user = pf.ID WHERE p.ID NOT IN (SELECT ID FROM posts WHERE user = ? AND (mode = 2 OR mode = 3))
+            ON p.user = pf.ID WHERE p.user = ? AND p.ID NOT IN (SELECT ID FROM posts WHERE user = ? AND mode = 3)
+            AND p.ID IN (SELECT ID FROM posts WHERE user = ? AND mode = 2 AND EXISTS (SELECT * FROM relationships WHERE user1 = ? AND user2 = ?))
             AND p.ID IN
             (SELECT p1.ID
             FROM posts p1, relationships r
@@ -376,7 +377,7 @@ class Post {
             AND (p1.share_from IS NULL
             OR EXISTS (SELECT * FROM relationships r1 WHERE r1.user2 = (SELECT user FROM posts WHERE ID = p1.share_from) AND r1.user1 = ?))
             AND (p1.mode = 2 OR p1.mode = 3))
-            ORDER BY p.date_created ASC","iii",array($user_id, $user_id, $user_id));
+            ORDER BY p.date_created ASC","iiiiiii",array($user_id, $user_id, $user_id, $_SESSION['user_id'], $user_id, $_SESSION['user_id'], $_SESSION['user_id']));
         } else {
             $posts = getRows($conn,
             "SELECT p.*, pf.display_name, pf.profile_image FROM posts p JOIN profiles pf

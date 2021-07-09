@@ -27,9 +27,9 @@
 ?>
     <div class="container-fluid" style="margin-top: 80px;">
         <div class="row">
-            <div class="col-1">
+            <div class="col-md-1 col-0">
             </div>
-            <div class="col-10">
+            <div class="col-md-10 col-sm-12">
                 <?php if($post->post['share_from'] == null):?>
                 <div class="feedCard container-fluid p-0" id="<?php echo htmlspecialchars($post->post_id) ?>">
                     <div class="d-flex pr-3">
@@ -200,7 +200,7 @@
                 </div>
                 <?php endif; ?>
             </div>
-            <div class="col-1">
+            <div class="col-md-1 col-0">
             </div>
 <?php endif?>
 

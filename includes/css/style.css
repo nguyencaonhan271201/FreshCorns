@@ -274,6 +274,35 @@ body {
     .button-block button span {
         display: none;
     }
+
+    .comment-section .pl-4.pr-4.pt-2.pb-2 {
+        padding: 0px !important;
+    }
+
+    .profile-header .d-md-block {
+        display: none;
+    }
+
+    .profile-header ul.row.align-items-center.mt-3.mt-md-0 {
+        padding: 0px !important;
+    }
+
+    .row.profile-body {
+        padding: 5px !important;
+    }
+
+    .middle-wrapper #posts {
+        max-width: 98vw !important;
+    }
+
+    .profile-pic {
+        width: 80px;
+        height: 80px;
+    }
+
+    .chat-room-list .d-flex.justify-content-between a, .chat-room-list .d-flex.justify-content-between a i  {
+        width: 100%;
+    }
 }
 @media only screen and (max-width: 991px) {
     .mid-box {
