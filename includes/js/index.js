@@ -25,14 +25,14 @@ theMovieDb.movies.getPopular({}, data => {
             
             setTimeout(function() {
                 $('img#carousel').attr("src",theMovieDb.common.images_uri+'original'+img_links[i]);
-            }, 300);
+            }, 400);
             
             setTimeout(function() {
                 if (document.querySelector("img#carousel").classList.contains("fade-out")) {
                     $("img#carousel").removeClass("fade-out");
                 }
                 $('img#carousel').addClass("fade-in");
-            }, 600)
+            }, 1300)
         }, 5000);
 
     }, data =>{
