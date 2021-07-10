@@ -331,7 +331,8 @@ function printPosts(div,results){
               && !target.classList.contains("editDelete") && !target.classList.contains("editCancel") && !target.classList.contains("editSubmit")
               && !target.classList.contains("selectize-control") && !target.classList.contains("selectize-input") && !target.classList.contains("postMode")
               && !target.classList.contains("postCap") && !target.classList.contains("emojibtn") && !target.classList.contains("emojioneemoji")
-              && !target.classList.contains("cardChin")) {
+              && !target.classList.contains("cardChin") && !target.parentNode.classList.contains("cardChin")
+              && !target.parentNode.parentNode.classList.contains("cardChin")) {
               
               let checkEmojiOneClassList = false;
               for (let i = 0; i < target.classList.length; i++) {

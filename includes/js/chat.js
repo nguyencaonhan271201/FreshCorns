@@ -589,7 +589,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     //Update the rooms list once every minute
-    setTimeout(function() {
+    setInterval(function() {
         ajaxRoomsList(2);
     }, 60000)
 
