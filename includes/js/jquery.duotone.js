@@ -215,7 +215,7 @@ var slice = [].slice;
 
     Duotone.prototype.settings = {
       gradientMap: 'black, white',
-      hdpi: false
+      hdpi: true
     };
 
     function Duotone(el, options) {

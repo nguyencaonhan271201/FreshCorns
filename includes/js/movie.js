@@ -62,14 +62,17 @@ function printMovieDatas(result,palette,type){
     $('p#overview').text(result['overview']).css("color",`rgb(${palette[0][0]},${palette[0][1]},${palette[0][2]})`).css("background-color",`rgb(${palette[1][0]},${palette[1][1]},${palette[1][2]})`);
 
     /*$('body').css("background-image",'url("'+theMovieDb.common.images_uri+'original'+result['backdrop_path']+'")');*/
-    $('img#backdrop').attr('src',theMovieDb.common.images_uri+'original'+result['backdrop_path'])
+    $('img.backdrop').attr('src',theMovieDb.common.images_uri+'original'+result['backdrop_path']);
 
-    if ((palette[0][0]*0.299 + palette[0][1]*0.587 + palette[0][2]*0.114) > 150) $('img#backdrop').duotone({
+    if ((palette[0][0]*0.299 + palette[0][1]*0.587 + palette[0][2]*0.114) > 150) $('img.backdrop#duo').duotone({
         gradientMap: `rgb(${palette[1][0]},${palette[1][1]},${palette[1][2]}), rgb(${palette[0][0]},${palette[0][1]},${palette[0][2]})`
-    })
-    else $('img#backdrop').duotone({
+    });
+    else $('img.backdrop#duo').duotone({
         gradientMap: `rgb(${palette[0][0]},${palette[0][1]},${palette[0][2]}), rgb(${palette[1][0]},${palette[1][1]},${palette[1][2]})`
     });
+
+    $('img.backdrop#duo').fadeOut(60000);
+
 
     if (movieIsSignedIn) {
         loadPosts_movie(palette);

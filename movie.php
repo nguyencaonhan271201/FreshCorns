@@ -4,7 +4,9 @@
 ?>
 <link rel="stylesheet" href="includes/css/movie.css?v=<?=time();?>">
 <link rel="stylesheet" href="includes/css/feed.css?v=<?=time();?>">
-    <img id="backdrop" crossorigin="anonymous" onerror="this.style.display='none'">
+
+    <img class="backdrop" id="og"crossorigin="anonymous" onerror="this.style.display='none'">
+    <img class="backdrop" id="duo"crossorigin="anonymous" onerror="this.style.display='none'">
 
     <img id="poster" class="img-fluid w-25" crossorigin="anonymous" onerror="this.style.display='none'">
     
