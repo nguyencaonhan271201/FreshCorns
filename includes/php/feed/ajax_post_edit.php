@@ -3,8 +3,6 @@
     require_once ("../db.php");
     require_once ("../filemanager.php");
     require_once ("../../../classes/Post.php");
-    var_dump($_POST);
-    var_dump($_FILES);
 
   if (Post::checkPost($_POST)) {
     $media = null;    

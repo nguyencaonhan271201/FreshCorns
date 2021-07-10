@@ -53,32 +53,30 @@ Date.prototype.addHours= function(h){
           if (result['share_from'] == null) {
             html = `
             <div class="feedCard container-fluid p-0" id="${result['ID']}">
-              <div class="d-flex pr-3">
-                <a href="profile.php?id=${result['user']}" class="cardUserImg">
-                    <img src="${result['profile_image']}">
-                </a>
-  
-                <div class="cardInfos container-fluid p-0" id="${result['ID']}">
-                    <h2>
-                      <a href="profile.php?id=${result['user']}">${result['display_name']}</a> 
-                      talking about 
-                      <a class="movie_title" id='${
-                        JSON.stringify({
-                          movie_id:result['movie_id'],
-                          movie_type:result['movie_type']
-                        })}' href="movie.php?id=${result['movie_id']}&type=${result['movie_type']}"></a> 
-                      • <a class="cardDate" data-tooltip="${new Date(result['date_created']).addHours(7).toLocaleString()}" data-tooltip-location="bottom" 
-                        href="single_post.php?id=${result['ID']}">${getDuration(new Date(result['date_created']))}</a>
-                      • <span class="cardMode" data-tooltip-location="bottom" data-tooltip="${result['mode'] == 1? "Public" : result['mode'] == 2? "Followers" : "Private"}" 
-                        id="${result['mode']}">${mode_text}</span>
-                    </h2>
-  
-                    <p class="limited_text">${result['content']}</p>   
-                    
-                    <div class="cardMedia">    
-                      <img src="${(result['media'])?result['media']:''}" class="media">
-                    </div>
-                </div>
+              <a href="profile.php?id=${result['user']}" class="cardUserImg">
+                  <img src="${result['profile_image']}">
+              </a>
+
+              <div class="cardInfos mx-100" id="${result['ID']}">
+                  <h2>
+                    <a href="profile.php?id=${result['user']}">${result['display_name']}</a> 
+                    talking about 
+                    <a class="movie_title" id='${
+                      JSON.stringify({
+                        movie_id:result['movie_id'],
+                        movie_type:result['movie_type']
+                      })}' href="movie.php?id=${result['movie_id']}&type=${result['movie_type']}"></a> 
+                    • <a class="cardDate" data-tooltip="${new Date(result['date_created']).addHours(7).toLocaleString()}" data-tooltip-location="bottom" 
+                      href="single_post.php?id=${result['ID']}">${getDuration(new Date(result['date_created']))}</a>
+                    • <span class="cardMode" data-tooltip-location="bottom" data-tooltip="${result['mode'] == 1? "Public" : result['mode'] == 2? "Followers" : "Private"}" 
+                      id="${result['mode']}">${mode_text}</span>
+                  </h2>
+
+                  <p class="limited_text">${result['content']}</p>   
+                  
+                  <div class="cardMedia">    
+                    <img src="${(result['media'])?result['media']:''}" class="media">
+                  </div>
               </div>   
             </div>
           `;
@@ -91,51 +89,47 @@ Date.prototype.addHours= function(h){
             else if (result['original']['mode']==3)  share_mode_text='<i class="bi bi-person"></i>';
             html = `
             <div class="feedCard container-fluid p-0" id="${result['ID']}">
-              <div class="d-flex pr-3">
-                <a href="profile.php?id=${result['user']}" class="cardUserImg">
-                    <img src="${result['profile_image']}">
-                </a>
+              <a href="profile.php?id=${result['user']}" class="cardUserImg">
+                  <img src="${result['profile_image']}">
+              </a>
   
-                <div class="cardInfos container-fluid p-0" id="${result['ID']}">
-                    <h2>
-                      <a href="profile.php?id=${result['user']}">${result['display_name']}</a> 
-                      • <a class="cardDate" data-tooltip="${new Date(result['date_created']).addHours(7).toLocaleString()}" data-tooltip-location="bottom"
-                       href="single_post.php?id=${result['ID']}">${getDuration(new Date(result['date_created']))}</a>
-                      • <span class="cardMode" data-tooltip-location="bottom" data-tooltip="${result['mode'] == 1? "Public" : result['mode'] == 2? "Followers" : "Private"}"
-                        id="${result['mode']}">${mode_text}</span>
-                    </h2>
-  
-                    <div class="share-content" data-id="${result['original']['ID']}">
-                      <div class="feedCard container-fluid p-0">
-                        <div class="d-flex pr-3">
-                          <a href="profile.php?id=${result['original']['user']}" class="cardUserImg">
-                              <img src="${result['original']['profile_image']}">
-                          </a>
-  
-                          <div class="cardInfos container-fluid p-0">
-                              <h2>
-                                <a href="profile.php?id=${result['original']['user']}">${result['original']['display_name']}</a> 
-                                talking about 
-                                <a class="movie_title" id='${
-                                JSON.stringify({
-                                  movie_id:result['original']['movie_id'],
-                                  movie_type:result['original']['movie_type']
-                                })}' href="movie.php?id=${result['original']['movie_id']}&type=${result['original']['movie_type']}"></a> 
-                                • <a class="cardDate" data-tooltip="${new Date(result['original']['date_created']).addHours(7).toLocaleString()}" data-tooltip-location="bottom"
-                                  href="single_post.php?id=${result['original']['ID']}">${getDuration(new Date(result['original']['date_created']))}</a>
-                                • <span class="cardMode" data-tooltip-location="bottom" data-tooltip="${result['original']['mode'] == 1? "Public" : result['original']['mode'] == 2? "Followers" : "Private"}"
-                                  id="${result['original']['mode']}">${share_mode_text}</span>
-                              </h2>
-  
-                              <p class="limited_text">${result['original']['content']}</p>   
-                              
-                              <div class="cardMedia">    
-                                <img src="${(result['original']['media'])?result['original']['media']:''}" class="media">
-                              </div>
+              <div class="cardInfos mw-100" id="${result['ID']}">
+                  <h2>
+                    <a href="profile.php?id=${result['user']}">${result['display_name']}</a> 
+                    • <a class="cardDate" data-tooltip="${new Date(result['date_created']).addHours(7).toLocaleString()}" data-tooltip-location="bottom"
+                      href="single_post.php?id=${result['ID']}">${getDuration(new Date(result['date_created']))}</a>
+                    • <span class="cardMode" data-tooltip-location="bottom" data-tooltip="${result['mode'] == 1? "Public" : result['mode'] == 2? "Followers" : "Private"}"
+                      id="${result['mode']}">${mode_text}</span>
+                  </h2>
+
+                  <div class="share-content mw-100" data-id="${result['original']['ID']}">
+                    <div class="feedCard container-fluid p-0">
+                      <a href="profile.php?id=${result['original']['user']}" class="cardUserImg">
+                          <img src="${result['original']['profile_image']}">
+                      </a>
+
+                      <div class="cardInfos">
+                          <h2>
+                            <a href="profile.php?id=${result['original']['user']}">${result['original']['display_name']}</a> 
+                            talking about 
+                            <a class="movie_title" id='${
+                            JSON.stringify({
+                              movie_id:result['original']['movie_id'],
+                              movie_type:result['original']['movie_type']
+                            })}' href="movie.php?id=${result['original']['movie_id']}&type=${result['original']['movie_type']}"></a> 
+                            • <a class="cardDate" data-tooltip="${new Date(result['original']['date_created']).addHours(7).toLocaleString()}" data-tooltip-location="bottom"
+                              href="single_post.php?id=${result['original']['ID']}">${getDuration(new Date(result['original']['date_created']))}</a>
+                            • <span class="cardMode" data-tooltip-location="bottom" data-tooltip="${result['original']['mode'] == 1? "Public" : result['original']['mode'] == 2? "Followers" : "Private"}"
+                              id="${result['original']['mode']}">${share_mode_text}</span>
+                          </h2>
+
+                          <p class="limited_text">${result['original']['content']}</p>   
+                          
+                          <div class="cardMedia">    
+                            <img src="${(result['original']['media'])?result['original']['media']:''}" class="media">
                           </div>
-                        </div>   
-                      </div>
                     </div>
+                  </div>
                 </div>
               </div>   
             </div>

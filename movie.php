@@ -4,9 +4,9 @@
 ?>
 <link rel="stylesheet" href="includes/css/movie.css?v=<?=time();?>">
 <link rel="stylesheet" href="includes/css/feed.css?v=<?=time();?>">
-    <img id="backdrop" crossorigin="anonymous">
+    <img id="backdrop" crossorigin="anonymous" onerror="this.style.display='none'">
 
-    <img id="poster" class="img-fluid w-25" crossorigin="anonymous">
+    <img id="poster" class="img-fluid w-25" crossorigin="anonymous" onerror="this.style.display='none'">
     
     <h1 id ="year"></h1>  
     <div id="basic_infos">  

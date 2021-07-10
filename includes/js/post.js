@@ -176,7 +176,7 @@ function loadTrendingMoviesToDOM() {
                 <div class="film-box d-flex flex-row">
                     <img class="d-inline-block film-img" src="${filmPoster}">
                     <div class="ml-2 flex-title">
-                        <h6 class="m-0">${filmTitle}</h6>
+                        <h6 class="m-0 limited_title">${filmTitle}</h6>
                     </div>
                 </div>
             </a>
