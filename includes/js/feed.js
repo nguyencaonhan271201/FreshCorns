@@ -330,11 +330,21 @@ function printPosts(div,results){
               && !target.classList.contains("postFile") && !target.classList.contains("bi-image")
               && !target.classList.contains("editDelete") && !target.classList.contains("editCancel") && !target.classList.contains("editSubmit")
               && !target.classList.contains("selectize-control") && !target.classList.contains("selectize-input") && !target.classList.contains("postMode")
-              && !target.classList.contains("postCap") && !target.classList.contains("emojionearea-editor") && !target.classList.contains("emojionearea-button")
-              && !target.classList.contains("emojionearea-button-open") && !target.classList.contains("emojionearea-button-close")
-              && !target.classList.contains("emojionearea-picker") && !target.classList.contains("emojionearea-wrapper")) {
-              console.log(postID);
-              window.location = `single_post.php?id=${postID}`;
+              && !target.classList.contains("postCap") && !target.classList.contains("emojibtn") && !target.classList.contains("emojioneemoji")
+              && !target.classList.contains("cardChin")) {
+              
+              let checkEmojiOneClassList = false;
+              for (let i = 0; i < target.classList.length; i++) {
+                if (target.classList[i].indexOf("emojionearea") != -1) {
+                  checkEmojiOneClassList = true;
+                  return false
+                }
+              }
+
+              console.log(target);
+              
+              if (!checkEmojiOneClassList)
+                window.location = `single_post.php?id=${postID}`;
             }
           }
       })

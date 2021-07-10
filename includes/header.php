@@ -126,7 +126,7 @@
                         <li class="nav-item active dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img class="rounded-circle d-inline-block profile-img" src="<?php echo $_SESSION['profile_img'];?>"> 
-                                <?php echo htmlspecialchars($_SESSION['username']); ?>
+                                <?php echo htmlspecialchars($_SESSION['name']); ?>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="chat.php"><i class="fa fa-comments" aria-hidden="true"></i> Chat</a>

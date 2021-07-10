@@ -656,7 +656,7 @@ document.querySelector("#btn-leave-approve").addEventListener("click", function(
             }
         }
     }
-    xhr.send(`leave_room=true&room_ID=${roomID}&csrf=${message.querySelector('input[name="csrf"]').value}`);
+    xhr.send(`leave_room=true&room_ID=${roomID}&csrf=${document.querySelector("#messageForm").querySelector('input[name="csrf"]').value}`);
 })
 
 function addRoomObjectsEventListener() {

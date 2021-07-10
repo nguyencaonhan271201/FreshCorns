@@ -369,17 +369,21 @@ class Post {
             "SELECT DISTINCT p.*, pf.display_name, pf.profile_image
             FROM posts p JOIN profiles pf
             ON p.user = pf.ID WHERE p.user = ?
-            AND (p.ID IN (SELECT ID FROM posts WHERE user = ? AND mode = 1 OR mode = 2 AND share_from IS NULL)
+            AND (p.ID IN (SELECT ID FROM posts WHERE user = ? AND mode = 1 AND share_from IS NULL)
+            OR p.ID IN (SELECT ID FROM posts WHERE user = ? AND mode = 2 AND share_from IS NULL AND EXISTS (
+                SELECT * FROM relationships WHERE user1 = ? AND user2 = ?
+            ))
             OR p.ID IN
             (SELECT p.ID
             FROM posts p
             WHERE user = ? AND mode = 1 OR mode = 2 AND share_from IS NOT NULL
             AND (SELECT mode FROM posts p2 WHERE p2.ID = p.share_from) = 1
-            OR EXISTS (SELECT * FROM relationships WHERE user1 = ? AND user2 = (
+            OR ((SELECT mode FROM posts p2 WHERE p2.ID = p.share_from) = 2 
+            AND EXISTS (SELECT * FROM relationships WHERE user1 = ? AND user2 = (
                 SELECT user FROM posts p1 WHERE p1.ID = p.share_from
-            ))))
+            )))))
             AND p.ID IN (SELECT ID FROM posts WHERE user = ?)
-            ORDER BY p.date_created ASC","iiiii",array($user_id, $user_id, $user_id, $_SESSION['user_id'], $user_id));
+            ORDER BY p.date_created ASC","iiiiiiii",array($user_id, $user_id, $user_id, $_SESSION['user_id'], $user_id, $user_id, $_SESSION['user_id'], $user_id));
         } else {
             $posts = getRows($conn,
             "SELECT p.*, pf.display_name, pf.profile_image FROM posts p JOIN profiles pf

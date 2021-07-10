@@ -95,7 +95,7 @@
                             <!-- Username -->
                                     <?php echo $profile->display_name; ?></span>
                                 </div>
-                                <div class="d-md-block">
+                                <div class="d-md-block d-sm-none">
                             <!-- Button -->
                                 <?php if($_SESSION['signed_in']): ?>
                                     <!-- Edit profile -->
@@ -117,10 +117,32 @@
                                 </div>
                             </div>
 
-                        </figure>           
+                        </figure>          
                     </div>
                 <!-- Header links icon using svg -->
                 <div class="container">
+                    <div class="row">
+                        <div class="col-8 offset-2 d-md-none d-sm-block">
+                            <!-- Button -->
+                                <?php if($_SESSION['signed_in']): ?>
+                                    <!-- Edit profile -->
+                                    <?php if($_SESSION['user_id'] == $profile_user_id): ?>
+                                    <button class="btn btn-block btn-primary btn-icon-text btn-edit-profile">
+                                        <a href="edit_profile.php" style="color: white;">Edit profile</a>
+                                    </button>
+                                    <!-- Unfollow -->
+                                    <?php elseif(in_array($_SESSION['user_id'], $profile->followers)): ?>
+                                        <button class="btn btn-block btn-danger btn-unfollow" on>
+                                        <a href="profile.php?order=<?php echo 'unfollow' ?>&id=<?php echo $profile_user_id ?>" style="color: Yellow;">Unfollow</a>
+                                    </button>
+                                    <!-- Follow -->
+                                    <?php elseif (!in_array($_SESSION['user_id'], $profile->followers)): ?>
+                                        <button class="btn btn-block btn-success btn-follow">
+                                        <a href="profile.php?order=<?php echo 'follow' ?>&id=<?php echo $profile_user_id ?>" style="color: white;">Follow</a>
+                                    <?php endif ?>
+                                <?php endif ?>
+                        </div>
+                    </div>
                     <ul class="row align-items-center mt-3 mt-md-0">
                         <!-- <li class="header-link-item d-flex align-items-center active">
                             <a class="pt-1px d-none d-md-block" href="#">Timeline</a>

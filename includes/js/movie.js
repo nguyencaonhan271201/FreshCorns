@@ -101,7 +101,8 @@ function printPosts_simplified(div,results,palette){
     results.forEach(result=>{
         console.log(result);
         let html = `
-            <div class="feedCard container-fluid p-0" id="${result['ID']}">
+            <div class="feedCard container-fluid p-0" id="${result['ID']}"
+                data-tooltip="Click to the time to view the whole content of the post" data-tooltip-location="top">
               <div class="d-flex pr-3">
                 <a href="profile.php?id=${result['user']}" class="cardUserImg">
                     <img src="${result['profile_image']}">
