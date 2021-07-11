@@ -23,6 +23,7 @@ body{
     object-position: center;
     object-fit: cover;
     border-radius: 0!important;
+    visibility: hidden;
 }
 
 #poster{

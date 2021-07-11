@@ -70,9 +70,12 @@ function printMovieDatas(result,palette,type){
     else $('img.backdrop#duo').duotone({
         gradientMap: `rgb(${palette[0][0]},${palette[0][1]},${palette[0][2]}), rgb(${palette[1][0]},${palette[1][1]},${palette[1][2]})`
     });
-
-    $('img.backdrop#duo').fadeOut(60000);
-
+    $('img.backdrop#duo').on('load', function(){
+        console.log($(this));
+        $(this).css('visibility','visible');
+        setTimeout(function(){$('img.backdrop#og').css('visibility','visible');}, 5000);
+        $(this).fadeOut(60000);
+    });
 
     if (movieIsSignedIn) {
         loadPosts_movie(palette);
