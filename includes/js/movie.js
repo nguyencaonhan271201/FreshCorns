@@ -73,7 +73,7 @@ function printMovieDatas(result,palette,type){
     $('img.backdrop#duo').on('load', function(){
         console.log($(this));
         $(this).css('visibility','visible');
-        setTimeout(function(){$('img.backdrop#og').css('visibility','visible');}, 5000);
+        setTimeout(function(){$('img.backdrop#og').css('visibility','visible');}, 10000);
         $(this).fadeOut(60000);
     });
 
