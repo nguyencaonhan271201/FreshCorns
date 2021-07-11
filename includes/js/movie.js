@@ -99,16 +99,15 @@ Date.prototype.addHours= function(h){
 
 function printPosts_simplified(div,results,palette){
     results.forEach(result=>{
-        console.log(result);
+        if (result['share_from']!=null) return true;
         let html = `
             <div class="feedCard container-fluid p-0" id="${result['ID']}"
                 data-tooltip="Click to the time to view the whole content of the post" data-tooltip-location="top">
-              <div class="d-flex pr-3">
                 <a href="profile.php?id=${result['user']}" class="cardUserImg">
                     <img src="${result['profile_image']}">
                 </a>
   
-                <div class="cardInfos container-fluid p-0" id="${result['ID']}">
+                <div class="cardInfos mw-100" id="${result['ID']}">
                     <h2>
                       <a href="profile.php?id=${result['user']}">${result['display_name']}</a> 
                       • <a class="cardDate" data-tooltip="${new Date(result['date_created']).addHours(7).toLocaleString()}" data-tooltip-location="bottom"
@@ -120,7 +119,6 @@ function printPosts_simplified(div,results,palette){
                     <div class="cardMedia">    
                       <img src="${(result['media'])?result['media']:''}" class="media">
                     </div>
-                </div>
               </div>   
             </div>         
             `;

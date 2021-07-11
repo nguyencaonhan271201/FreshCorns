@@ -577,11 +577,12 @@ body {
     border-radius: 5px;
     object-fit: cover;
 }
+
 .limited_title{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 20ch;
+    max-width: 11ch;
 }
 
 .global-container {
